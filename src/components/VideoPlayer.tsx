@@ -1,4 +1,5 @@
 import Image from "next/image";
+import PlaceholderArt from "@/components/PlaceholderArt";
 import { getEmbedUrl } from "@/lib/portfolio";
 
 interface VideoPlayerProps {
@@ -24,8 +25,9 @@ export default function VideoPlayer({ url, title, poster }: VideoPlayerProps) {
       ) : (
         <>
           {poster && <Image src={poster} alt={title} fill className="object-cover" />}
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-wave-gold/10 to-wave-dark">
-            <div className="text-5xl text-wave-gold mb-2">▶</div>
+          <PlaceholderArt label={undefined} />
+          <div className="absolute inset-0 flex flex-col items-center justify-center">
+            <div aria-hidden="true" className="text-5xl text-wave-gold mb-2">▶</div>
             <p className="text-wave-gray text-sm">Video coming soon</p>
           </div>
         </>

@@ -20,6 +20,7 @@ Marketing site for a cinematography/photography business. Next.js App Router, Ty
 | Service/package copy | `src/app/services/page.tsx` |
 | About copy | `src/app/about/page.tsx` |
 | Images | `public/` (portfolio under `public/portfolio/`, brand under `public/brand/`); reference as `/portfolio/name.jpg` |
+| AI/chatbot facts (services, pricing, FAQ, tone) | `src/lib/knowledge.ts` (fill every `TODO`; bots may only state facts written here) |
 | Form fields/validation | `src/types/forms.ts` (zod) |
 | Form handlers | `src/app/api/contact/route.ts`, `src/app/api/inquiry/route.ts` |
 

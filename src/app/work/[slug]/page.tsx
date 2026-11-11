@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import VideoPlayer from "@/components/VideoPlayer";
+import PlaceholderArt from "@/components/PlaceholderArt";
 import { getItem, portfolioItems } from "@/lib/portfolio";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -47,9 +48,11 @@ export default async function ProjectPage({ params }: Props) {
           {isVideo ? (
             <VideoPlayer url={item.videoUrl} title={item.title} poster={item.image} />
           ) : (
-            <div className="relative w-full aspect-[3/2] rounded-lg overflow-hidden bg-gradient-to-br from-wave-gold/10 to-wave-dark">
-              {item.image && (
+            <div className="relative w-full aspect-[3/2] rounded-lg overflow-hidden">
+              {item.image ? (
                 <Image src={item.image} alt={item.title} fill className="object-contain" />
+              ) : (
+                <PlaceholderArt label={item.category} />
               )}
             </div>
           )}

@@ -56,7 +56,7 @@ Visit [http://localhost:3000](http://localhost:3000)
 
 ## Status
 
-Phases 1 and 2 are built. Portfolio items, phone number and social links are placeholders until real content arrives. Forms validate, have honeypot + rate limiting, and send email through Resend once `RESEND_API_KEY` and `INQUIRY_TO_EMAIL` are set (until then they only log). Google Analytics loads when `NEXT_PUBLIC_GA_ID` is set. Privacy/Terms pages are drafts needing legal review. See `NEXT_STEPS.md` for what is needed and the AI/automation plan, and `AGENTS.md` for rules for AI agents.
+Phases 1 and 2 are built. Portfolio items, phone number and social links are placeholders until real content arrives. Forms validate, have honeypot + rate limiting, and send email through Resend once `RESEND_API_KEY` and `INQUIRY_TO_EMAIL` are set (until then they only log). Google Analytics loads when `NEXT_PUBLIC_GA_ID` is set. If `AI_API_KEY` is set, inquiry notification emails include an AI-drafted reply (owner-only, never sent to clients) built from `src/lib/knowledge.ts`. Privacy/Terms pages are drafts needing legal review. See `NEXT_STEPS.md` for what is needed and the AI/automation plan, and `AGENTS.md` for rules for AI agents.
 
 ## Pages
 

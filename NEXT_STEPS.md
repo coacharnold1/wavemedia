@@ -64,7 +64,7 @@ Foundation is in place: content lives in data files (`src/lib/portfolio.ts`, `sr
 
 1. **Inquiry delivery (email).** Prerequisite for everything below. Needs: receiving email + Resend key.
 2. **AI-assisted content updates via Git.** Agents add portfolio items and edit copy on a branch and open a PR; a human approves. Needs: nothing new. Works today using `AGENTS.md`.
-3. **AI-drafted replies and follow-ups.** On each inquiry, generate a draft reply and email it to you for approval (no auto-send at first). Needs: an AI provider API key, plus step 1.
+3. **AI-drafted replies and follow-ups.** BUILT: each inquiry email to you includes a draft reply (never auto-sent). Activates with `AI_API_KEY` (any OpenAI-compatible provider) plus step 1. **Needs from you: fill in the TODOs in `src/lib/knowledge.ts`** (service area, pricing policy, turnaround, process, FAQ answers) so drafts and the future chatbot stay accurate.
 4. **Automated workflow.** Inquiry to HoneyBook/CRM to confirmation email to calendar. Needs: HoneyBook (or other CRM) API access.
 5. **Visitor chatbot.** Answers questions about services and captures leads into the inquiry flow. Needs: an AI provider key, and your real services, pricing policy, FAQs and tone so it does not make things up.
 

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import PlaceholderArt from "@/components/PlaceholderArt";
 import Link from "next/link";
 import { getFeatured } from "@/lib/portfolio";
 
@@ -44,8 +45,9 @@ export default function HomePage() {
                 href={`/work/${item.slug}`}
                 className="bg-wave-dark rounded-lg overflow-hidden hover:transform hover:scale-105 transition-all duration-300 group"
               >
-                <div className="w-full h-64 bg-gradient-to-br from-wave-gold/10 to-wave-dark flex items-center justify-center">
-                  <div className="text-4xl text-wave-gold">
+                <div className="relative w-full h-64 flex items-center justify-center">
+                  <PlaceholderArt label={item.category} />
+                  <div aria-hidden="true" className="relative text-4xl text-wave-gold">
                     {item.type === "video" ? "▶" : "◉"}
                   </div>
                 </div>

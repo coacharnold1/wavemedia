@@ -2,9 +2,10 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { PortfolioItem } from "@/lib/portfolio";
 import VideoPlayer from "@/components/VideoPlayer";
+import PlaceholderArt from "@/components/PlaceholderArt";
 
 interface PortfolioGalleryProps {
   items: PortfolioItem[];
@@ -16,6 +17,7 @@ export default function PortfolioGallery({ items, categories }: PortfolioGallery
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState<"newest" | "oldest">("newest");
   const [active, setActive] = useState<PortfolioItem | null>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
 
   const visible = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -32,9 +34,16 @@ export default function PortfolioGallery({ items, categories }: PortfolioGallery
 
   useEffect(() => {
     if (!active) return;
+    const trigger = document.activeElement as HTMLElement | null;
+    closeRef.current?.focus();
+    document.body.style.overflow = "hidden";
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setActive(null);
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+      trigger?.focus();
+    };
   }, [active]);
 
   return (
@@ -45,6 +54,7 @@ export default function PortfolioGallery({ items, categories }: PortfolioGallery
             <button
               key={c}
               onClick={() => setCategory(c)}
+              aria-pressed={category === c}
               className={`px-4 py-2 rounded-full text-sm border transition-colors ${
                 category === c
                   ? "bg-wave-gold text-wave-black border-wave-gold"
@@ -86,8 +96,8 @@ export default function PortfolioGallery({ items, categories }: PortfolioGallery
               onClick={() => setActive(item)}
               className="text-left bg-wave-charcoal rounded-lg overflow-hidden border border-wave-dark hover:border-wave-gold transition-colors group"
             >
-              <div className="relative w-full h-64 bg-gradient-to-br from-wave-gold/10 to-wave-dark flex items-center justify-center">
-                {item.image && (
+              <div className="relative w-full h-64 flex items-center justify-center">
+                {item.image ? (
                   <Image
                     src={item.image}
                     alt={item.title}
@@ -96,9 +106,11 @@ export default function PortfolioGallery({ items, categories }: PortfolioGallery
                     className="object-cover"
                     loading="lazy"
                   />
+                ) : (
+                  <PlaceholderArt label={item.category} />
                 )}
                 {item.type === "video" && (
-                  <span className="relative text-4xl text-wave-gold group-hover:scale-110 transition-transform">
+                  <span aria-hidden="true" className="relative text-4xl text-wave-gold group-hover:scale-110 transition-transform">
                     ▶
                   </span>
                 )}
@@ -127,6 +139,7 @@ export default function PortfolioGallery({ items, categories }: PortfolioGallery
             onClick={(e) => e.stopPropagation()}
           >
             <button
+              ref={closeRef}
               onClick={() => setActive(null)}
               aria-label="Close"
               className="absolute top-3 right-4 text-2xl text-wave-gray hover:text-wave-gold"
@@ -136,9 +149,11 @@ export default function PortfolioGallery({ items, categories }: PortfolioGallery
             {active.type === "video" ? (
               <VideoPlayer url={active.videoUrl} title={active.title} poster={active.image} />
             ) : (
-              <div className="relative w-full aspect-[3/2] rounded-lg overflow-hidden bg-gradient-to-br from-wave-gold/10 to-wave-dark">
-                {active.image && (
+              <div className="relative w-full aspect-[3/2] rounded-lg overflow-hidden">
+                {active.image ? (
                   <Image src={active.image} alt={active.title} fill className="object-contain" />
+                ) : (
+                  <PlaceholderArt label={active.category} />
                 )}
               </div>
             )}

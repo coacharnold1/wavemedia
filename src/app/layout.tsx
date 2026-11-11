@@ -61,8 +61,14 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:bg-wave-gold focus:text-wave-black focus:px-4 focus:py-2 focus:rounded"
+        >
+          Skip to content
+        </a>
         <Header />
-        {children}
+        <div id="main">{children}</div>
         <Footer />
         <Analytics />
       </body>

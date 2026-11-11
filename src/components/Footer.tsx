@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 
 export default function Footer() {
@@ -11,10 +12,13 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           {/* Brand */}
           <div>
-            <div className="text-2xl font-bold mb-4">
-              <span className="text-wave-white">WAVE</span>
-              <span className="text-wave-gold ml-2">MEDIA</span>
-            </div>
+            <Image
+              src="/brand/logo-stacked.png"
+              alt="WAVE Media"
+              width={480}
+              height={600}
+              className="h-32 w-auto mb-4 -ml-2 mix-blend-lighten"
+            />
             <p className="text-wave-gray">Crafting Stories With Intent</p>
           </div>
 

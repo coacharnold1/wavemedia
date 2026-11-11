@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 
@@ -18,9 +19,19 @@ export default function Header() {
   return (
     <header className="fixed w-full top-0 z-50 bg-wave-black/95 backdrop-blur-md border-b border-wave-gold/10">
       <nav className="container-wave py-4 flex justify-between items-center">
-        <Link href="/" className="text-2xl font-bold">
-          <span className="text-wave-white">WAVE</span>
-          <span className="text-wave-gold ml-2">MEDIA</span>
+        <Link href="/" className="flex items-center gap-3 text-2xl font-bold" aria-label="WAVE Media home">
+          <Image
+            src="/brand/logo-mark.png"
+            alt=""
+            width={398}
+            height={256}
+            className="h-8 w-auto mix-blend-lighten"
+            priority
+          />
+          <span>
+            <span className="text-wave-white">WAVE</span>
+            <span className="text-wave-gold ml-2">MEDIA</span>
+          </span>
         </Link>
 
         {/* Desktop Navigation */}

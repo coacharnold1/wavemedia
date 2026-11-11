@@ -2,7 +2,7 @@
 
 _Last updated: November 11, 2026_
 
-**Done:** Phase 1 (foundation) and Phase 2 (portfolio pages, services, booking, project pages, SEO files, working forms).
+**Done:** Phase 1 (foundation) and Phase 2 (portfolio pages, services, booking, project pages, SEO files, working forms), plus: email delivery code, spam protection, analytics hook, structured data, 404/error pages, draft Privacy/Terms, accessibility pass, placeholder art, content validator (`npm run validate:content`), AI reply drafts and knowledge base. Those features switch on when the keys below are provided.
 **Live preview:** run `npm run build && npx next start -p 3100`, then open http://127.0.0.1:3100
 
 ---
@@ -39,6 +39,25 @@ Aim for 5 to 10 pieces to start. The current 9 entries are placeholders.
 - [ ] **Testimonials:** client quotes with name and company (optional)
 - [ ] **WAVE Academy:** what is it? Currently a "coming soon" page.
 
+### Business facts for the AI assistant (`src/lib/knowledge.ts`)
+Short answers are fine; I'll write them up. Drafted replies and the future chatbot will only say what is written here.
+- [ ] Service area (NJ / tri-state? do you travel?)
+- [ ] Pricing policy (never quote, "starting at", or published prices)
+- [ ] Typical turnaround for video and photo
+- [ ] Your process, inquiry to delivery
+- [ ] FAQ answers: travel, revisions included, footage ownership/usage rights, deposits/payment plans
+- [ ] Preferred tone, or a sample email you like
+
+### Legal
+- [ ] Review the draft Privacy Policy and Terms (`/privacy`, `/terms`); have a lawyer confirm before launch
+
+### Accounts and keys (I can set these up with you; keys go in `.env.local` / hosting settings, never in chat or git)
+- [ ] Resend account + API key, and the email address that receives inquiries
+- [ ] Verified sending domain/address for Resend (optional at first)
+- [ ] AI provider account + API key (OpenAI or any OpenAI-compatible provider)
+- [ ] Google Analytics 4 measurement ID (`G-XXXX`)
+- [ ] HoneyBook access (only if going with Option B)
+
 ### Branding
 - [ ] A transparent-background or vector version (SVG/PNG) of the logo, if one exists. The current files have solid black backgrounds.
 - [ ] Brand font or colors, if different from the current black and gold
@@ -49,12 +68,11 @@ Aim for 5 to 10 pieces to start. The current 9 entries are placeholders.
 ## 2. Decisions needed
 
 - [ ] **Form handling:** how should inquiries reach you?
-  - Option A: email only (Resend or similar). Fastest, and I can add it as soon as I have the receiving address and an API key.
-  - Option B: HoneyBook integration (needs account and API access).
-  - Email sending code is built and ready: it activates once `RESEND_API_KEY` and `INQUIRY_TO_EMAIL` are set. Until then **no inquiries are received**.
+  - Option A: email only (Resend). **Built and ready.** It activates once `RESEND_API_KEY` and `INQUIRY_TO_EMAIL` are set. Until then **no inquiries are received** (they only log on the server).
+  - Option B: HoneyBook integration (needs account and API access). Not built yet.
 - [ ] **Hosting:** Vercel is recommended for Next.js (free tier is fine to start).
 - [ ] **Domain:** who controls `wavemedianj.com` DNS?
-- [ ] **Analytics:** OK to add Google Analytics 4?
+- [ ] **AI:** which provider, and confirm bots never message clients without your approval (recommended).
 
 ---
 
@@ -75,12 +93,12 @@ Decisions: which AI provider/account you want to use, and whether bots may ever 
 ## 3. What I'll do once I have the above
 
 1. Swap real content into `src/lib/portfolio.ts` and `public/`, and optimize images
-2. Update About, Services and footer copy
-3. Connect forms to email (and/or HoneyBook)
+2. Update About, Services and footer copy; fill `src/lib/knowledge.ts`
+3. Add the keys to `.env.local`, test real email and AI drafts end to end
 4. Add testimonials section (if provided)
-5. Add Google Analytics
+5. Add the HoneyBook/CRM step and the visitor chatbot (after the knowledge base is filled in)
 6. Run Lighthouse and mobile checks, then fix issues
-7. Deploy to Vercel and point the domain
+7. Deploy to Vercel (set the same env vars there) and point the domain
 
 ---
 
@@ -93,5 +111,7 @@ Decisions: which AI provider/account you want to use, and whether bots may ever 
 | Generic service descriptions and package tiers | `src/app/services/page.tsx`, `src/app/page.tsx` |
 | About page text | `src/app/about/page.tsx` |
 | Academy "coming soon" | `src/app/academy/page.tsx` |
+| `TODO` business facts for AI | `src/lib/knowledge.ts` |
+| Draft Privacy / Terms text | `src/app/privacy/page.tsx`, `src/app/terms/page.tsx` |
 
 See `ROADMAP.md` for the longer-term plan (Phases 3 to 5).

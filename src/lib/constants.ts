@@ -4,12 +4,21 @@ export const siteConfig = {
   tagline: "Crafting Stories With Intent",
   url: "https://wavemedianj.com",
   email: "contact@wavemedianj.com",
+  // Placeholder number: replace with the real business line
   phone: "+1 (123) 456-7890",
+  // Social links are hidden until a URL is set
   social: {
-    instagram: "https://instagram.com/wavemedianj",
-    linkedin: "https://linkedin.com/company/wave-media",
+    instagram: "",
+    linkedin: "",
   },
 };
+
+export const phoneHref = `tel:${siteConfig.phone.replace(/[^+\d]/g, "")}`;
+
+export const socialLinks = [
+  { label: "Instagram", href: siteConfig.social.instagram },
+  { label: "LinkedIn", href: siteConfig.social.linkedin },
+].filter((s) => s.href);
 
 export const colors = {
   black: "#0a0a0a",

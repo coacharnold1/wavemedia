@@ -49,10 +49,12 @@ export default function Header() {
 
         {/* Mobile Menu Button */}
         <button
-          className="md:hidden text-wave-gold"
+          className="md:hidden text-wave-gold text-2xl px-2"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+          aria-expanded={mobileMenuOpen}
         >
-          ☰
+          {mobileMenuOpen ? '✕' : '☰'}
         </button>
 
         {/* Mobile Navigation */}

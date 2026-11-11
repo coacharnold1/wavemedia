@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { phoneHref, siteConfig, socialLinks } from '@/lib/constants';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -71,23 +72,30 @@ export default function Footer() {
             <h4 className="text-wave-gold font-bold mb-4">Contact</h4>
             <ul className="space-y-2">
               <li>
-                <a href="mailto:contact@wavemedianj.com" className="text-wave-gray hover:text-wave-gold transition-colors">
-                  contact@wavemedianj.com
+                <a href={`mailto:${siteConfig.email}`} className="text-wave-gray hover:text-wave-gold transition-colors">
+                  {siteConfig.email}
                 </a>
               </li>
               <li>
-                <a href="tel:+1234567890" className="text-wave-gray hover:text-wave-gold transition-colors">
-                  (123) 456-7890
+                <a href={phoneHref} className="text-wave-gray hover:text-wave-gold transition-colors">
+                  {siteConfig.phone}
                 </a>
               </li>
-              <li className="pt-2 flex gap-4">
-                <a href="#" className="text-wave-gold hover:text-wave-gold-light transition-colors">
-                  Instagram
-                </a>
-                <a href="#" className="text-wave-gold hover:text-wave-gold-light transition-colors">
-                  LinkedIn
-                </a>
-              </li>
+              {socialLinks.length > 0 && (
+                <li className="pt-2 flex gap-4">
+                  {socialLinks.map((s) => (
+                    <a
+                      key={s.label}
+                      href={s.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-wave-gold hover:text-wave-gold-light transition-colors"
+                    >
+                      {s.label}
+                    </a>
+                  ))}
+                </li>
+              )}
             </ul>
           </div>
         </div>

@@ -9,7 +9,11 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "WAVE Media - Premium Cinematography & Photography",
+  metadataBase: new URL("https://wavemedianj.com"),
+  title: {
+    default: "WAVE Media - Premium Cinematography & Photography",
+    template: "%s",
+  },
   description:
     "Premium cinematography, photography, and creative production services. WAVE Media creates compelling stories for brands, athletes, and organizations.",
   keywords: [

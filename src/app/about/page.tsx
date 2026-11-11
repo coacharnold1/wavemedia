@@ -55,7 +55,7 @@ export default function AboutPage() {
               image and their message.
             </p>
             <p>
-              Whether it's a commercial, documentary, music video, or corporate project, we
+              Whether it&apos;s a commercial, documentary, music video, or corporate project, we
               approach each production with the professionalism and vision it deserves.
             </p>
           </div>
@@ -86,7 +86,7 @@ export default function AboutPage() {
       <section className="py-24 bg-wave-charcoal">
         <div className="container-wave text-center">
           <h2 className="text-4xl font-bold mb-6">Ready to create something great?</h2>
-          <p className="text-wave-gray mb-8">Let's discuss your project.</p>
+          <p className="text-wave-gray mb-8">Let&apos;s discuss your project.</p>
           <button className="btn-primary text-lg">Get In Touch</button>
         </div>
       </section>

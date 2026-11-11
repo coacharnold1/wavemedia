@@ -1,5 +1,12 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import "@/styles/globals.css";
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+};
 
 export const metadata: Metadata = {
   title: "WAVE Media - Premium Cinematography & Photography",
@@ -12,7 +19,6 @@ export const metadata: Metadata = {
     "creative media",
     "commercial production",
   ],
-  viewport: "width=device-width, initial-scale=1",
   authors: [{ name: "WAVE Media LLC" }],
   openGraph: {
     type: "website",
@@ -31,7 +37,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="bg-wave-black text-wave-white">{children}</body>
+      <body className="bg-wave-black text-wave-white">
+        <Header />
+        {children}
+        <Footer />
+      </body>
     </html>
   );
 }

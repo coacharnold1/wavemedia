@@ -25,10 +25,11 @@ Marketing site for a cinematography/photography business. Next.js App Router, Ty
 
 ### Rules
 - Use a branch and open a PR for content or code changes. Do not push straight to `main` unless told to.
+- After editing `portfolio.ts`, run `npm run validate:content`.
 - Before finishing, run `npm run lint`, `npx tsc --noEmit` and `npx next build`; all must pass.
 - Never commit secrets. Keys go in `.env.local` (see `.env.example`).
 - Do not invent client names, testimonials, prices or credentials. Leave placeholders and ask.
 - Video items take a YouTube/Vimeo URL in `videoUrl`; photos need an `image` path.
 - Keep copy in the brand voice: confident, cinematic, concise.
-- Forms currently only log submissions; email/CRM delivery is not wired yet (see `NEXT_STEPS.md`).
+- Forms email via `src/lib/email.ts` (Resend) only when env keys are set; otherwise they just log. CRM/HoneyBook is not wired yet (see `NEXT_STEPS.md`).
 

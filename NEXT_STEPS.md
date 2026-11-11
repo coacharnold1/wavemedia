@@ -51,7 +51,7 @@ Aim for 5 to 10 pieces to start. The current 9 entries are placeholders.
 - [ ] **Form handling:** how should inquiries reach you?
   - Option A: email only (Resend or similar). Fastest, and I can add it as soon as I have the receiving address and an API key.
   - Option B: HoneyBook integration (needs account and API access).
-  - Both forms currently only log to the server console, so **no inquiries are received yet**.
+  - Email sending code is built and ready: it activates once `RESEND_API_KEY` and `INQUIRY_TO_EMAIL` are set. Until then **no inquiries are received**.
 - [ ] **Hosting:** Vercel is recommended for Next.js (free tier is fine to start).
 - [ ] **Domain:** who controls `wavemedianj.com` DNS?
 - [ ] **Analytics:** OK to add Google Analytics 4?

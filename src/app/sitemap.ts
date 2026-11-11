@@ -11,6 +11,8 @@ const staticRoutes = [
   "/contact",
   "/booking",
   "/academy",
+  "/privacy",
+  "/terms",
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {

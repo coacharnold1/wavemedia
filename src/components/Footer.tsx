@@ -101,8 +101,13 @@ export default function Footer() {
         </div>
 
         {/* Bottom */}
-        <div className="border-t border-wave-gold/10 pt-8 text-center text-wave-gray">
+        <div className="border-t border-wave-gold/10 pt-8 text-center text-wave-gray space-y-2">
           <p>© {currentYear} WAVE Media LLC. All rights reserved. | Crafting Stories With Intent</p>
+          <p className="text-sm">
+            <Link href="/privacy" className="hover:text-wave-gold">Privacy</Link>
+            {' · '}
+            <Link href="/terms" className="hover:text-wave-gold">Terms</Link>
+          </p>
         </div>
       </div>
     </footer>

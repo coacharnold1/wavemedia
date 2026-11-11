@@ -5,6 +5,7 @@ export const contactFormSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
   phone: z.string().optional(),
   message: z.string().min(10, "Message must be at least 10 characters"),
+  website: z.string().optional(),
 });
 
 export type ContactFormData = z.infer<typeof contactFormSchema>;
@@ -17,6 +18,7 @@ export const inquiryFormSchema = z.object({
   budget: z.string().optional(),
   timeline: z.string().optional(),
   details: z.string().min(20, "Please provide more details about your project"),
+  website: z.string().optional(),
 });
 
 export type InquiryFormData = z.infer<typeof inquiryFormSchema>;

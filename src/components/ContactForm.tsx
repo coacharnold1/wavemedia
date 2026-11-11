@@ -42,6 +42,14 @@ export default function ContactForm() {
       noValidate
       className="space-y-6 bg-wave-charcoal p-8 rounded-lg border border-wave-gold/10"
     >
+      <input
+        type="text"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        className="hidden"
+        {...register("website")}
+      />
       <div>
         <label htmlFor="name" className="block text-wave-white font-semibold mb-2">Name *</label>
         <input id="name" type="text" placeholder="Your name" className={field} {...register("name")} />

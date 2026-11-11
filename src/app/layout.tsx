@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import Analytics from "@/components/Analytics";
+import { siteConfig, socialLinks } from "@/lib/constants";
 import "@/styles/globals.css";
 
 export const viewport: Viewport = {
@@ -24,6 +26,7 @@ export const metadata: Metadata = {
     "commercial production",
   ],
   authors: [{ name: "WAVE Media LLC" }],
+  alternates: { canonical: "./" },
   openGraph: {
     type: "website",
     locale: "en_US",
@@ -39,12 +42,29 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    name: siteConfig.name,
+    description: siteConfig.description,
+    url: siteConfig.url,
+    email: siteConfig.email,
+    logo: `${siteConfig.url}/brand/logo-mark.png`,
+    slogan: siteConfig.tagline,
+    ...(socialLinks.length ? { sameAs: socialLinks.map((s) => s.href) } : {}),
+  };
+
   return (
     <html lang="en">
       <body className="bg-wave-black text-wave-white">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         <Header />
         {children}
         <Footer />
+        <Analytics />
       </body>
     </html>
   );

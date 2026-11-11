@@ -52,10 +52,11 @@ Visit [http://localhost:3000](http://localhost:3000)
 - `npm run lint` - Run ESLint (flat config, `eslint.config.mjs`)
 - `npm run format` - Format code with Prettier
 - `npx tsc --noEmit` - Type check
+- `npm run validate:content` - Check `src/lib/portfolio.ts` (slugs, categories, image paths)
 
 ## Status
 
-Phases 1 and 2 are built. Portfolio items, phone number and social links are placeholders until real content arrives. Forms validate but **do not yet deliver email** (they log on the server). See `NEXT_STEPS.md` for what is needed and the AI/automation plan, and `AGENTS.md` for rules for AI agents.
+Phases 1 and 2 are built. Portfolio items, phone number and social links are placeholders until real content arrives. Forms validate, have honeypot + rate limiting, and send email through Resend once `RESEND_API_KEY` and `INQUIRY_TO_EMAIL` are set (until then they only log). Google Analytics loads when `NEXT_PUBLIC_GA_ID` is set. Privacy/Terms pages are drafts needing legal review. See `NEXT_STEPS.md` for what is needed and the AI/automation plan, and `AGENTS.md` for rules for AI agents.
 
 ## Pages
 
@@ -115,7 +116,7 @@ Header (logo, responsive menu), Footer, PortfolioGallery, VideoPlayer, ContactFo
 
 - `POST /api/contact` - Process contact form submissions
 - `POST /api/inquiry` - Process project inquiry forms
-Both currently validate and log only; email/CRM delivery is pending.
+Both send an email notification via Resend when configured; CRM/HoneyBook is pending.
 
 ## Deployment
 

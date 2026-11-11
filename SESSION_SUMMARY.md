@@ -4,6 +4,8 @@
 **Session Duration**: ~3-4 hours  
 **Phase**: 1 of 5 ✅ COMPLETE
 
+> Historical Day 1 summary. Later work (branding, Phase 2 pages, SEO, form fixes, AI groundwork) is summarized in `README.md` and `NEXT_STEPS.md`.
+
 ---
 
 ## 🎉 What We Accomplished

@@ -35,11 +35,7 @@ npm install
 ```
 
 2. Set up environment variables:
-Create `.env.local` and add:
-```
-NEXT_PUBLIC_SITE_URL=https://wavemedianj.com
-NEXT_PUBLIC_HONEYBOOK_API_KEY=your_honeybook_api_key
-```
+Copy `.env.example` to `.env.local` and fill in values (never commit it).
 
 3. Start development server:
 ```bash
@@ -53,27 +49,33 @@ Visit [http://localhost:3000](http://localhost:3000)
 - `npm run dev` - Start development server
 - `npm run build` - Build for production
 - `npm start` - Start production server
-- `npm run lint` - Run ESLint
+- `npm run lint` - Run ESLint (flat config, `eslint.config.mjs`)
 - `npm run format` - Format code with Prettier
+- `npx tsc --noEmit` - Type check
+
+## Status
+
+Phases 1 and 2 are built. Portfolio items, phone number and social links are placeholders until real content arrives. Forms validate but **do not yet deliver email** (they log on the server). See `NEXT_STEPS.md` for what is needed and the AI/automation plan, and `AGENTS.md` for rules for AI agents.
 
 ## Pages
 
-- **Home** (`/`) - Hero section, featured work, services, CTA
-- **About** (`/about`) - Company story, philosophy, services
-- **Cinematography** (`/cinematography`) - Portfolio gallery
-- **Photography** (`/photography`) - Portfolio gallery
-- **Services** (`/services`) - Detailed service offerings
+- **Home** (`/`) - Hero, featured work, services, CTA
+- **About** (`/about`) - Company story and philosophy
+- **Cinematography** (`/cinematography`) and **Photography** (`/photography`) - Filterable galleries with lightbox
+- **Work detail** (`/work/[slug]`) - Individual project page
+- **Services** (`/services`) - Service offerings
 - **Booking** (`/booking`) - Project inquiry form
 - **Contact** (`/contact`) - Contact form
-- **Academy** (`/academy`) - Courses (future)
+- **Academy** (`/academy`) - Coming soon page
+- Also: `sitemap.xml`, `robots.txt`, Open Graph/Twitter images
+
+## Content
+
+Portfolio data: `src/lib/portfolio.ts`. Contact info and social links: `src/lib/constants.ts`. Images: `public/`. Logos: `public/brand/`.
 
 ## Components
 
-### Header
-Responsive navigation with mobile menu. Fixed positioning with backdrop blur.
-
-### Footer
-Multi-column footer with navigation, contact info, and social links.
+Header (logo, responsive menu), Footer, PortfolioGallery, VideoPlayer, ContactForm and BookingForm (react-hook-form + zod).
 
 ## Design System
 
@@ -113,8 +115,7 @@ Multi-column footer with navigation, contact info, and social links.
 
 - `POST /api/contact` - Process contact form submissions
 - `POST /api/inquiry` - Process project inquiry forms
-- `GET /api/portfolio` - Fetch portfolio items (placeholder)
-- `GET /api/services` - Fetch services (placeholder)
+Both currently validate and log only; email/CRM delivery is pending.
 
 ## Deployment
 
@@ -130,17 +131,17 @@ Multi-column footer with navigation, contact info, and social links.
 3. Configure environment variables
 4. Custom domain setup
 
-## Future Enhancements (Phase 2+)
+## Future Enhancements
 
-- [ ] Portfolio gallery with filters and lightbox
-- [ ] Video hosting integration (Vimeo/YouTube)
-- [ ] HoneyBook CRM integration
-- [ ] Email service integration (SendGrid/Resend)
-- [ ] Image optimization with Cloudinary
+- [x] Portfolio gallery with filters and lightbox
+- [x] Video embeds (YouTube/Vimeo)
+- [x] Basic SEO (metadata, sitemap, robots, OG images)
+- [ ] Email delivery (Resend) and HoneyBook CRM
+- [ ] AI features: reply drafts, visitor chatbot, agent content updates (see `NEXT_STEPS.md`)
+- [ ] Image optimization
 - [ ] Admin dashboard
 - [ ] WAVE Academy course listings
-- [ ] SEO optimization (meta tags, structured data)
-- [ ] Analytics integration
+- [ ] Structured data and analytics
 
 ## Performance
 

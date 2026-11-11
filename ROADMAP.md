@@ -1,7 +1,10 @@
 # WAVE Media - What's Next? Roadmap
 
-**Date**: November 10, 2026  
+**Updated**: November 11, 2026  
 **Phase 1 Status**: ✅ COMPLETE  
+**Phase 2 Status**: ✅ BUILT with placeholder content (real media/copy pending from partner; see `NEXT_STEPS.md`)  
+**Current checklist**: `NEXT_STEPS.md` is the source of truth for what is needed now. AI/automation plan is in section 2b there.  
+**Note**: The Phase 2 checkboxes below are historical; page, gallery, video player, booking, sitemap/robots/OG images are done. Still open: real content, email/HoneyBook delivery, analytics, admin, deployment.  
 **GitHub**: https://github.com/coacharnold1/wavemedia  
 **Live Dev Server**: http://localhost:3000
 

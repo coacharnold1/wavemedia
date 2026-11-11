@@ -7,3 +7,28 @@ This version has breaking changes — APIs, conventions, and file structure may 
 This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
 
 <!-- END:nextjs-agent-rules -->
+
+## WAVE Media: guide for AI agents and bots
+
+Marketing site for a cinematography/photography business. Next.js App Router, TypeScript, Tailwind. Brand: black and gold (`wave-black`, `wave-gold`), tagline "Crafting Stories With Intent".
+
+### Where content lives (edit these, not page code)
+| Change | File |
+| --- | --- |
+| Add/edit portfolio project | `src/lib/portfolio.ts` (`portfolioItems`; unique `slug`, `type` video or photo, `category` must match the lists in that file) |
+| Phone, email, social links | `src/lib/constants.ts` (`siteConfig`; empty social URL = hidden) |
+| Service/package copy | `src/app/services/page.tsx` |
+| About copy | `src/app/about/page.tsx` |
+| Images | `public/` (portfolio under `public/portfolio/`, brand under `public/brand/`); reference as `/portfolio/name.jpg` |
+| Form fields/validation | `src/types/forms.ts` (zod) |
+| Form handlers | `src/app/api/contact/route.ts`, `src/app/api/inquiry/route.ts` |
+
+### Rules
+- Use a branch and open a PR for content or code changes. Do not push straight to `main` unless told to.
+- Before finishing, run `npm run lint`, `npx tsc --noEmit` and `npx next build`; all must pass.
+- Never commit secrets. Keys go in `.env.local` (see `.env.example`).
+- Do not invent client names, testimonials, prices or credentials. Leave placeholders and ask.
+- Video items take a YouTube/Vimeo URL in `videoUrl`; photos need an `image` path.
+- Keep copy in the brand voice: confident, cinematic, concise.
+- Forms currently only log submissions; email/CRM delivery is not wired yet (see `NEXT_STEPS.md`).
+

@@ -58,6 +58,20 @@ Aim for 5 to 10 pieces to start. The current 9 entries are placeholders.
 
 ---
 
+## 2b. AI & automation plan
+
+Foundation is in place: content lives in data files (`src/lib/portfolio.ts`, `src/lib/constants.ts`), `AGENTS.md` tells coding agents the rules, and `.env.example` lists the keys we will need. Suggested order, since each step builds on the last:
+
+1. **Inquiry delivery (email).** Prerequisite for everything below. Needs: receiving email + Resend key.
+2. **AI-assisted content updates via Git.** Agents add portfolio items and edit copy on a branch and open a PR; a human approves. Needs: nothing new. Works today using `AGENTS.md`.
+3. **AI-drafted replies and follow-ups.** On each inquiry, generate a draft reply and email it to you for approval (no auto-send at first). Needs: an AI provider API key, plus step 1.
+4. **Automated workflow.** Inquiry to HoneyBook/CRM to confirmation email to calendar. Needs: HoneyBook (or other CRM) API access.
+5. **Visitor chatbot.** Answers questions about services and captures leads into the inquiry flow. Needs: an AI provider key, and your real services, pricing policy, FAQs and tone so it does not make things up.
+
+Decisions: which AI provider/account you want to use, and whether bots may ever send messages to clients without human approval (recommended: no, at least at first).
+
+---
+
 ## 3. What I'll do once I have the above
 
 1. Swap real content into `src/lib/portfolio.ts` and `public/`, and optimize images

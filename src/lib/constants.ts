@@ -3,9 +3,8 @@ export const siteConfig = {
   description: "Premium Cinematography & Photography",
   tagline: "Crafting Stories With Intent",
   url: "https://wavemedianj.com",
-  email: "contact@wavemedianj.com",
-  // Placeholder number: replace with the real business line
-  phone: "+1 (123) 456-7890",
+  email: "wavemedianj@gmail.com",
+  phone: "+1 (908) 774-7760",
   // Social links are hidden until a URL is set
   social: {
     instagram: "",

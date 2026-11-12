@@ -1,5 +1,6 @@
 import Image from "next/image";
 import PlaceholderArt from "@/components/PlaceholderArt";
+import ServiceIcon from "@/components/ServiceIcon";
 import Link from "next/link";
 import { getFeatured } from "@/lib/portfolio";
 
@@ -71,21 +72,24 @@ export default function HomePage() {
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {["Cinematography", "Photography", "Event Production", "Retainer Programs"].map(
-              (service, idx) => (
-                <div
-                  key={idx}
-                  className="bg-wave-charcoal p-8 rounded-lg border border-wave-dark hover:border-wave-gold transition-colors"
-                >
-                  <div className="text-4xl text-accent mb-4">★</div>
-                  <h3 className="text-2xl font-bold mb-3">{service}</h3>
-                  <p className="text-wave-gray">
-                    Premium production services tailored to your vision and
-                    objectives.
-                  </p>
-                </div>
-              )
-            )}
+            {[
+              { name: "Cinematography", icon: "cinematography" },
+              { name: "Photography", icon: "photography" },
+              { name: "Event Production", icon: "content" },
+              { name: "Retainer Programs", icon: "storytelling" },
+            ].map((service) => (
+              <div
+                key={service.name}
+                className="bg-wave-charcoal p-8 rounded-lg border border-wave-dark hover:border-wave-gold transition-colors"
+              >
+                <ServiceIcon type={service.icon as any} className="w-14 h-14 mb-4" />
+                <h3 className="text-2xl font-bold mb-3">{service.name}</h3>
+                <p className="text-wave-gray">
+                  Premium production services tailored to your vision and
+                  objectives.
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       </section>

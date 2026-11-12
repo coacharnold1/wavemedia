@@ -26,16 +26,16 @@ export default function AboutPage() {
           <h2 className="text-4xl font-bold mb-8 text-accent">Our Story</h2>
           <div className="space-y-6 text-wave-gray leading-relaxed">
             <p>
-              WAVE Media was founded with a single mission: to create premium visual content that
-              tells compelling stories for our clients.
+              I&apos;m Lorenzo Williams, a New Jersey filmmaker, photographer, educator, and head boys varsity basketball coach at Hillside High School. I founded WAVE Media to tell stories about people and the work they care about. That might mean capturing the energy of a team on media day, showing the craftsmanship behind a small business, or recording a family celebration so they can come back to it years later.
             </p>
             <p>
-              We believe that great cinematography and photography go beyond capturing moments—they
-              convey emotion, intent, and meaning.
+              Coaching and teaching have shaped the way I work behind the camera. I listen first, give clear direction, and help people feel comfortable being themselves on camera. Some of my favorite moments come between takes, when people settle in and you get to see who they really are.
             </p>
             <p>
-              Our team brings together years of experience in commercial production, documentary
-              filmmaking, sports media, and creative direction.
+              Through WAVE Media, I produce brand films, social media reels, athlete highlights, team media days, and photo and video coverage for weddings and events. I also served as co-cinematographer on <em>91%: A Story of Triumph</em>, which won Best Documentary at the New York International Film Awards.
+            </p>
+            <p>
+              Every project starts with a conversation about who you want to reach and what you want them to remember. From planning the shoot to delivering the final edit, I keep that goal in view so the finished work feels true to you.
             </p>
           </div>
         </div>
@@ -47,16 +47,10 @@ export default function AboutPage() {
           <h2 className="text-4xl font-bold mb-8 text-accent">Our Philosophy</h2>
           <div className="space-y-6 text-wave-gray leading-relaxed">
             <p>
-              <strong className="text-wave-white">We craft stories with intent.</strong> Every frame,
-              every shot, every edit serves a purpose.
+              <strong className="text-wave-white">We craft stories with intent.</strong> Every frame is purposeful. Every project is a conversation about who you want to reach and what you want them to remember.
             </p>
             <p>
-              We work with brands, organizations, and individuals who are serious about their
-              image and their message.
-            </p>
-            <p>
-              Whether it&apos;s a commercial, documentary, music video, or corporate project, we
-              approach each production with the professionalism and vision it deserves.
+              From planning through final delivery, I keep that goal in view so your story feels authentic and true to you.
             </p>
           </div>
         </div>
@@ -85,9 +79,9 @@ export default function AboutPage() {
       {/* CTA */}
       <section className="py-24 bg-wave-charcoal">
         <div className="container-wave text-center">
-          <h2 className="text-4xl font-bold mb-6">Ready to create something great?</h2>
-          <p className="text-wave-gray mb-8">Let&apos;s discuss your project.</p>
-          <button className="btn-primary text-lg">Get In Touch</button>
+          <h2 className="text-4xl font-bold mb-6">Have a project in mind?</h2>
+          <p className="text-wave-gray mb-8">Let&apos;s talk about what you want to capture.</p>
+          <a href="/contact" className="btn-primary text-lg">Get In Touch</a>
         </div>
       </section>
     </main>

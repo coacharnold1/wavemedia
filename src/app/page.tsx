@@ -73,22 +73,23 @@ export default function HomePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {[
-              { name: "Cinematography", icon: "cinematography" },
-              { name: "Photography", icon: "photography" },
-              { name: "Event Production", icon: "content" },
-              { name: "Retainer Programs", icon: "storytelling" },
+              { name: "Cinematography", icon: "cinematography", href: "/services" },
+              { name: "Photography", icon: "photography", href: "/services" },
+              { name: "Event Production", icon: "content", href: "/services" },
+              { name: "Retainer Programs", icon: "storytelling", href: "/services" },
             ].map((service) => (
-              <div
+              <Link
                 key={service.name}
-                className="bg-wave-charcoal p-8 rounded-lg border border-wave-dark hover:border-wave-gold transition-colors"
+                href={service.href}
+                className="bg-wave-charcoal p-8 rounded-lg border border-wave-dark hover:border-wave-gold hover:shadow-lg hover:shadow-wave-gold/20 transition-all group"
               >
-                <ServiceIcon type={service.icon as any} className="w-14 h-14 mb-4" />
+                <ServiceIcon type={service.icon as any} className="w-14 h-14 mb-4 group-hover:scale-110 transition-transform" />
                 <h3 className="text-2xl font-bold mb-3">{service.name}</h3>
                 <p className="text-wave-gray">
                   Premium production services tailored to your vision and
                   objectives.
                 </p>
-              </div>
+              </Link>
             ))}
           </div>
         </div>

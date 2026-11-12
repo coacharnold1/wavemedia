@@ -73,8 +73,8 @@ export default function HomePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {[
-              { name: "Cinematography", icon: "cinematography", href: "/services" },
-              { name: "Photography", icon: "photography", href: "/services" },
+              { name: "Cinematography", icon: "cinematography", href: "/cinematography" },
+              { name: "Photography", icon: "photography", href: "/photography" },
               { name: "Event Production", icon: "content", href: "/services" },
               { name: "Retainer Programs", icon: "storytelling", href: "/services" },
             ].map((service) => (

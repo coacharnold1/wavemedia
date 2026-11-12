@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import ServiceIcon from "@/components/ServiceIcon";
 
 export const metadata: Metadata = {
   title: "Services | WAVE Media",
@@ -61,6 +62,18 @@ export default function ServicesPage() {
               key={s.id}
               className="bg-wave-charcoal p-8 rounded-lg border border-wave-dark hover:border-wave-gold transition-colors"
             >
+              <ServiceIcon
+                type={
+                  s.id === "cinematography"
+                    ? "cinematography"
+                    : s.id === "photography"
+                      ? "photography"
+                      : s.id === "events"
+                        ? "content"
+                        : "storytelling"
+                }
+                className="w-14 h-14 mb-4"
+              />
               <h2 className="text-3xl font-bold mb-3">{s.name}</h2>
               <p className="text-wave-gray mb-4">{s.summary}</p>
               <ul className="space-y-2 mb-6 text-wave-gray">

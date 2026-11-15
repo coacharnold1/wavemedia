@@ -2,23 +2,73 @@
 
 Premium cinematography, photography, and creative production platform built with Next.js.
 
-**Brand Tagline**: Crafting Stories With Intent
+**Brand Tagline**: Crafting Stories With Intent  
+**Status**: ✅ **LIVE ON VERCEL** with Admin Photo Manager
 
-## Project Structure
+---
+
+## 🚀 Quick Links
+
+- **Production Site**: https://wavemedia-six.vercel.app/
+- **Admin Portal**: https://wavemedia-six.vercel.app/admin (password: `waveadmin2024`)
+- **GitHub Repo**: https://github.com/coacharnold1/wavemedia
+- **Local Dev**: http://localhost:3000 (run `npm run dev`)
+
+---
+
+## What's New (November 15, 2026)
+
+✅ **Admin Photo Manager**
+- 42 photography images ready to organize
+- Password-protected admin portal at `/admin`
+- Real-time metadata editor (title, description, date, category)
+- Photo categorization system (Sports, Events, Corporate, Portraits, Lifestyle)
+- Featured photo toggle for homepage display
+- Portfolio code generation and export
+
+✅ **Production Deployment**
+- Site live on Vercel (wavemedia-six.vercel.app)
+- Auto-deploys from GitHub main branch
+- Environment variables configured
+- SSL/HTTPS enabled
+
+✅ **Complete Content**
+- Services page with comprehensive descriptions
+- About page with team bios (Lorenzo & Tim)
+- Photography and Cinematography portfolio pages
+- Contact and inquiry forms ready to use
 
 ```
 wavemedia/
-├── public/              # Static assets (images, videos, logos)
+├── public/
+│   ├── portfolio/       # 42 photography images (JPG)
+│   ├── brand/           # Brand assets and logos
+│   └── ...
 ├── src/
-│   ├── app/            # Next.js pages and layouts
-│   ├── components/     # Reusable React components
-│   ├── styles/         # Global CSS and Tailwind config
-│   ├── lib/            # Utilities and constants
-│   ├── types/          # TypeScript interfaces and schemas
-│   └── app/api/        # API routes (forms, integrations)
-├── .env.local          # Environment variables (not committed)
-├── package.json        # Dependencies and scripts
-└── tsconfig.json       # TypeScript configuration
+│   ├── app/
+│   │   ├── layout.tsx           # Root layout
+│   │   ├── page.tsx             # Homepage
+│   │   ├── about/page.tsx       # About page
+│   │   ├── services/page.tsx    # Services page
+│   │   ├── photography/page.tsx # Photo portfolio
+│   │   ├── admin/               # Admin portal (NEW!)
+│   │   │   ├── page.tsx
+│   │   │   ├── layout.tsx
+│   │   │   └── client.tsx
+│   │   └── api/
+│   │       ├── contact/route.ts
+│   │       ├── inquiry/route.ts
+│   │       ├── auth/verify-password/route.ts
+│   │       └── admin/sync-portfolio/route.ts
+│   ├── components/      # Reusable React components
+│   ├── styles/          # Global CSS and Tailwind
+│   ├── lib/             # Utilities and constants
+│   └── types/           # TypeScript interfaces
+├── .env.example         # Environment template
+├── .env.local          # Local env vars (NOT committed)
+├── package.json
+├── tsconfig.json
+└── README.md
 ```
 
 ## Quick Start

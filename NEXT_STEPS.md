@@ -1,117 +1,170 @@
-# WAVE Media: Next Steps & What We Need
+# WAVE Media: Next Steps & Remaining Work
 
-_Last updated: November 11, 2026_
+_Last updated: November 15, 2026_
 
-**Done:** Phase 1 (foundation) and Phase 2 (portfolio pages, services, booking, project pages, SEO files, working forms), plus: email delivery code, spam protection, analytics hook, structured data, 404/error pages, draft Privacy/Terms, accessibility pass, placeholder art, content validator (`npm run validate:content`), AI reply drafts and knowledge base. Those features switch on when the keys below are provided.
-**Live preview:** run `npm run build && npx next start -p 3100`, then open http://127.0.0.1:3100
+**Status:** ✅ **SITE LIVE ON VERCEL** with admin photo manager
+
+**Completed:** 
+- ✅ Phase 1-3: Foundation, content pages, services, portfolio structure
+- ✅ Admin photo portal with 42 images ready to organize
+- ✅ Production deployment on Vercel
+- ✅ Email delivery code, spam protection, analytics hooks
+- ✅ Structured data, 404/error pages, accessibility
+- ✅ Privacy/Terms pages, content validator
+- ✅ AI knowledge base foundation
+- ✅ Business contact details and social links
+- ✅ Team bios (Lorenzo & Tim) with placeholder for headshots
+
+**Live preview:** 
+- Production: https://wavemedia-six.vercel.app/
+- Admin: https://wavemedia-six.vercel.app/admin (password: waveadmin2024)
+- Local dev: `npm run dev` then http://localhost:3000
 
 ---
 
-## 1. What I need from you and your partner
+## 1. IMMEDIATE: Photo Organization (This Week)
 
-Send these in any order. Each item says where it lands on the site.
+### Log in to Admin Portal
+1. Go to: https://wavemedia-six.vercel.app/admin
+2. Enter password: `waveadmin2024`
+3. Click **"Scan for Photos"** to load 42 images
 
-### Contact details (quick, do first)
-- [ ] Real business phone number → footer + contact page
-- [ ] Business email (confirm `contact@wavemedianj.com` is correct)
-- [ ] Instagram URL → footer + contact page (hidden until provided)
-- [ ] LinkedIn URL → footer + contact page (hidden until provided)
-- [ ] Any other social links (Facebook, YouTube, TikTok)
+### Organize Photos
+For each photo:
+- [ ] Set category (Sports, Portraits, Events, Corporate, Lifestyle)
+- [ ] Add title (e.g., "High School Basketball Game")
+- [ ] Add description (1-2 sentences about the shot)
+- [ ] Set date (when the photo was taken)
+- [ ] Mark 5-10 as "Featured" for homepage display
 
-### Portfolio content (biggest item)
-For each project, send:
-- [ ] Title
-- [ ] Type: video or photo
-- [ ] Category
-  - Video: Commercials, Documentaries, Music Videos, Branded Content
-  - Photo: Sports, Portraits, Events, Corporate, Lifestyle
-- [ ] Year, and client name if you want it shown
-- [ ] One-line description
-- [ ] Video: a YouTube or Vimeo link (unlisted is fine)
-- [ ] Photo / video thumbnail: JPG or PNG, ideally at least 1600px wide
-
-Aim for 5 to 10 pieces to start. The current 9 entries are placeholders.
-
-### Page copy
-- [ ] **About:** company story, mission, who is behind WAVE (names, short bios, photos)
-- [ ] **Services:** your real packages and what each includes
-- [ ] **Pricing:** show prices, show "starting at", or keep "custom quote"?
-- [ ] **Testimonials:** client quotes with name and company (optional)
-- [ ] **WAVE Academy:** what is it? Currently a "coming soon" page.
-
-### Business facts for the AI assistant (`src/lib/knowledge.ts`)
-Short answers are fine; I'll write them up. Drafted replies and the future chatbot will only say what is written here.
-- [ ] Service area (NJ / tri-state? do you travel?)
-- [ ] Pricing policy (never quote, "starting at", or published prices)
-- [ ] Typical turnaround for video and photo
-- [ ] Your process, inquiry to delivery
-- [ ] FAQ answers: travel, revisions included, footage ownership/usage rights, deposits/payment plans
-- [ ] Preferred tone, or a sample email you like
+### Export Portfolio Code
+- [ ] Click **"Download"** or **"Copy Code"** 
+- [ ] Share the generated TypeScript code
+- [ ] I'll merge it into `src/lib/portfolio.ts`
+- [ ] Photos will auto-appear on the site
 
 ### Legal
 - [ ] Review the draft Privacy Policy and Terms (`/privacy`, `/terms`); have a lawyer confirm before launch
 
 ### Accounts and keys (I can set these up with you; keys go in `.env.local` / hosting settings, never in chat or git)
 - [ ] Resend account + API key, and the email address that receives inquiries
-- [ ] Verified sending domain/address for Resend (optional at first)
-- [ ] AI provider account + API key (OpenAI or any OpenAI-compatible provider)
-- [ ] Google Analytics 4 measurement ID (`G-XXXX`)
-- [ ] HoneyBook access (only if going with Option B)
+---
 
-### Branding
-- [ ] A transparent-background or vector version (SVG/PNG) of the logo, if one exists. The current files have solid black backgrounds.
-- [ ] Brand font or colors, if different from the current black and gold
-- [ ] A hero image or short background reel for the homepage (optional)
+## 2. NEXT: Content Completion & Team Assets
+
+### Add Team Headshots
+Send:
+- [ ] Lorenzo Williams professional headshot (JPG/PNG, 400x400px or larger)
+- [ ] Tim Arnold professional headshot (JPG/PNG, 400x400px or larger)
+- I'll add them to the About page alongside bios
+
+### Verify/Update Business Details
+- [x] Business phone number → footer + contact page
+- [x] Business email → contact page
+- [x] Instagram URL → footer
+- [x] Social links → footer (hidden until provided)
+- [ ] Any updates to services descriptions?
+- [ ] Any updates to About page text?
+- [ ] Client testimonials (optional but recommended)
+
+### AI Assistant Knowledge Base
+Fill in `src/lib/knowledge.ts` for AI-assisted replies:
+- [ ] Service area confirmation (NJ/tri-state/travel)
+- [ ] Pricing communication preferences
+- [ ] Typical turnaround for video/photo
+- [ ] Your inquiry-to-delivery process
+- [ ] FAQ answers (travel, revisions, rights, deposits)
+- [ ] Preferred email/chat tone
 
 ---
 
-## 2. Decisions needed
+## 3. THEN: Form Integration & Automation
 
-- [ ] **Form handling:** how should inquiries reach you?
-  - Option A: email only (Resend). **Built and ready.** It activates once `RESEND_API_KEY` and `INQUIRY_TO_EMAIL` are set. Until then **no inquiries are received** (they only log on the server).
-  - Option B: HoneyBook integration (needs account and API access). Not built yet.
-- [ ] **Hosting:** Vercel is recommended for Next.js (free tier is fine to start).
-- [ ] **Domain:** who controls `wavemedianj.com` DNS?
-- [ ] **AI:** which provider, and confirm bots never message clients without your approval (recommended).
+### Email Delivery Setup
+- [ ] Confirm receiving email address
+- [ ] Get Resend API key (free tier: https://resend.com/)
+- [ ] I'll set `RESEND_API_KEY` and `INQUIRY_TO_EMAIL` in Vercel
+- [ ] Test contact form end-to-end
 
----
+### HoneyBook Integration (Optional)
+- [ ] HoneyBook account access (if using)
+- [ ] HoneyBook API credentials
+- [ ] Mapping inquiry form → HoneyBook projects
+- [ ] Automated workflow setup
 
-## 2b. AI & automation plan
-
-Foundation is in place: content lives in data files (`src/lib/portfolio.ts`, `src/lib/constants.ts`), `AGENTS.md` tells coding agents the rules, and `.env.example` lists the keys we will need. Suggested order, since each step builds on the last:
-
-1. **Inquiry delivery (email).** Prerequisite for everything below. Needs: receiving email + Resend key.
-2. **AI-assisted content updates via Git.** Agents add portfolio items and edit copy on a branch and open a PR; a human approves. Needs: nothing new. Works today using `AGENTS.md`.
-3. **AI-drafted replies and follow-ups.** BUILT: each inquiry email to you includes a draft reply (never auto-sent). Activates with `AI_API_KEY` (any OpenAI-compatible provider) plus step 1. **Needs from you: fill in the TODOs in `src/lib/knowledge.ts`** (service area, pricing policy, turnaround, process, FAQ answers) so drafts and the future chatbot stay accurate.
-4. **Automated workflow.** Inquiry to HoneyBook/CRM to confirmation email to calendar. Needs: HoneyBook (or other CRM) API access.
-5. **Visitor chatbot.** Answers questions about services and captures leads into the inquiry flow. Needs: an AI provider key, and your real services, pricing policy, FAQs and tone so it does not make things up.
-
-Decisions: which AI provider/account you want to use, and whether bots may ever send messages to clients without human approval (recommended: no, at least at first).
+### Analytics
+- [ ] Google Analytics 4 account + Measurement ID
+- [ ] I'll add GA4 tracking to site
+- [ ] Setup conversion goals
 
 ---
 
-## 3. What I'll do once I have the above
+## 4. FINAL: Optimization & Deployment
 
-1. Swap real content into `src/lib/portfolio.ts` and `public/`, and optimize images
-2. Update About, Services and footer copy; fill `src/lib/knowledge.ts`
-3. Add the keys to `.env.local`, test real email and AI drafts end to end
-4. Add testimonials section (if provided)
-5. Add the HoneyBook/CRM step and the visitor chatbot (after the knowledge base is filled in)
-6. Run Lighthouse and mobile checks, then fix issues
-7. Deploy to Vercel (set the same env vars there) and point the domain
+- [ ] Image optimization for web performance
+- [ ] Lighthouse audit and fixes
+- [ ] Mobile responsiveness testing
+- [ ] Browser compatibility check
+- [ ] SEO meta tags verification
+- [ ] SSL certificate (auto on Vercel)
+- [ ] Custom domain setup (if needed)
+- [ ] Production deployment verification
 
 ---
 
-## 4. Known placeholders in the site right now
+## 5. Environment Variables (Vercel)
 
-| Item | Where |
-| --- | --- |
-| Phone `+1 (123) 456-7890` | `src/lib/constants.ts` |
-| 9 sample portfolio projects (no images or videos) | `src/lib/portfolio.ts` |
-| Generic service descriptions and package tiers | `src/app/services/page.tsx`, `src/app/page.tsx` |
-| About page text | `src/app/about/page.tsx` |
-| Academy "coming soon" | `src/app/academy/page.tsx` |
-| `TODO` business facts for AI | `src/lib/knowledge.ts` |
-| Draft Privacy / Terms text | `src/app/privacy/page.tsx`, `src/app/terms/page.tsx` |
+Currently set:
+- ✅ `ADMIN_PASSWORD` = `waveadmin2024`
 
-See `ROADMAP.md` for the longer-term plan (Phases 3 to 5).
+Need to add (when ready):
+- `RESEND_API_KEY` → enables email delivery
+- `INQUIRY_TO_EMAIL` → where to send inquiries
+- `AI_API_KEY` → for AI-assisted drafts
+- `GOOGLE_ANALYTICS_ID` → for analytics
+- Any HoneyBook API keys (if using)
+
+---
+
+## 6. Known Placeholders
+
+| Item | Where | Status |
+| --- | --- | --- |
+| Lorenzo Williams headshot | `/src/app/about` | ⏳ Needs image |
+| Tim Arnold headshot | `/src/app/about` | ⏳ Needs image |
+| 9 portfolio projects | `src/lib/portfolio.ts` | 🔄 42 photos in admin, awaiting org |
+| Client testimonials | `src/app/page.tsx` | ⏳ Needs quotes |
+| Academy page | `src/app/academy/page.tsx` | ⏳ Needs scope/content |
+| Business facts for AI | `src/lib/knowledge.ts` | ⏳ Needs input |
+| Privacy/Terms text | `src/app/privacy`, `src/app/terms` | ✅ Draft present |
+
+---
+
+## 7. Quick Reference: File Locations
+
+| What to Change | File | How |
+| --- | --- | --- |
+| Edit business info | `src/lib/constants.ts` | Edit `siteConfig` object |
+| Add portfolio projects | `src/lib/portfolio.ts` | Use admin portal or edit directly |
+| Edit services copy | `src/app/services/page.tsx` | Edit JSX content |
+| Edit about page | `src/app/about/page.tsx` | Edit JSX content |
+| Add headshots | `public/` | Place images, reference in page |
+| Contact form behavior | `src/app/api/contact/route.ts` | Edit API handler |
+| Inquiry form behavior | `src/app/api/inquiry/route.ts` | Edit API handler |
+| AI knowledge base | `src/lib/knowledge.ts` | Fill in `TODO` sections |
+
+---
+
+## 8. Timeline Suggestions
+
+**Week 1 (This Week):** Organize photos in admin portal  
+**Week 2:** Add headshots, verify copy, fill AI knowledge base  
+**Week 3:** Set up email and analytics  
+**Week 4:** Final testing and optimizations  
+
+**Then:** Go live! 🚀
+
+---
+
+**Last Updated:** November 15, 2026  
+**Next Phase:** Photo organization via admin portal

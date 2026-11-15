@@ -33,7 +33,7 @@ export const photographyCategories = [
   "Lifestyle",
 ];
 
-// Placeholder entries: replace with real projects, videoUrl and image paths.
+// Real portfolio entries. Placeholders removed.
 export const portfolioItems: PortfolioItem[] = [
   {
     slug: "91-percent-documentary",
@@ -46,32 +46,6 @@ export const portfolioItems: PortfolioItem[] = [
     videoUrl: "https://www.youtube.com/watch?v=-OBWLJRqpvY",
     image: "/portfolio/award.jpg",
     featured: true,
-  },
-  {
-    slug: "brand-launch-spot",
-    title: "Brand Launch Spot",
-    type: "video",
-    category: "Commercials",
-    year: 2025,
-    description: "A 60-second launch commercial shot on location with a full cinema package.",
-    featured: true,
-  },
-  {
-    slug: "the-long-road",
-    title: "The Long Road",
-    type: "video",
-    category: "Documentaries",
-    year: 2025,
-    description: "A short documentary following a local team through a championship season.",
-    featured: true,
-  },
-  {
-    slug: "midnight-session",
-    title: "Midnight Session",
-    type: "video",
-    category: "Music Videos",
-    year: 2024,
-    description: "A moody, light-driven music video built around practical lighting.",
   },
   {
     slug: "brandon-victoria-wedding",
@@ -142,55 +116,6 @@ export const portfolioItems: PortfolioItem[] = [
     description: "Promotional Video for Hillside Public School's opening of the 2026 School Year",
     videoUrl: "https://youtu.be/plWpBHdzer0",
     image: "https://img.youtube.com/vi/plWpBHdzer0/maxresdefault.jpg",
-  },
-  {
-    slug: "founders-story",
-    title: "Founder's Story",
-    type: "video",
-    category: "Branded Content",
-    year: 2024,
-    description: "Branded storytelling that puts the people behind the company on screen.",
-  },
-  {
-    slug: "friday-night-lights",
-    title: "Friday Night Lights",
-    type: "photo",
-    category: "Sports",
-    year: 2025,
-    description: "High-school football under the lights, captured action-first.",
-    featured: true,
-  },
-  {
-    slug: "studio-portraits",
-    title: "Studio Portraits",
-    type: "photo",
-    category: "Portraits",
-    year: 2025,
-    description: "Editorial portrait series with a clean, cinematic look.",
-  },
-  {
-    slug: "gala-evening",
-    title: "Gala Evening",
-    type: "photo",
-    category: "Events",
-    year: 2024,
-    description: "Candid and formal coverage of a charity gala.",
-  },
-  {
-    slug: "team-headshots",
-    title: "Team Headshots",
-    type: "photo",
-    category: "Corporate",
-    year: 2024,
-    description: "Consistent, polished headshots for a growing company.",
-  },
-  {
-    slug: "golden-hour-lifestyle",
-    title: "Golden Hour Lifestyle",
-    type: "photo",
-    category: "Lifestyle",
-    year: 2024,
-    description: "Natural-light lifestyle imagery for a regional brand.",
   },
 ];
 

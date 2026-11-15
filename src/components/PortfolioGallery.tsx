@@ -15,7 +15,7 @@ interface PortfolioGalleryProps {
 export default function PortfolioGallery({ items, categories }: PortfolioGalleryProps) {
   const [category, setCategory] = useState("All");
   const [query, setQuery] = useState("");
-  const [sort, setSort] = useState<"newest" | "oldest">("newest");
+  const [sort, setSort] = useState<"newest" | "oldest">("oldest");
   const [active, setActive] = useState<PortfolioItem | null>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
 

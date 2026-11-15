@@ -150,6 +150,17 @@ export const portfolioItems: PortfolioItem[] = [
     image: "https://img.youtube.com/vi/oXjBaJzmTNw/maxresdefault.jpg",
   },
   {
+    slug: "behind-scenes-director-hall",
+    title: "Behind the Scenes with Director Hall",
+    type: "video",
+    category: "Branded Content",
+    year: 2026,
+    client: "Director Hall",
+    description: "Behind-the-scenes footage from Director Hall productions.",
+    videoUrl: "https://www.youtube.com/watch?v=dGDDQOC03fw",
+    image: "https://img.youtube.com/vi/dGDDQOC03fw/maxresdefault.jpg",
+  },
+  {
     slug: "hillside-media-day",
     title: "Hillside High School Media Day Highlights",
     type: "video",

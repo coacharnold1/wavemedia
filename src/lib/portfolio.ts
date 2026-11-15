@@ -95,6 +95,17 @@ export const portfolioItems: PortfolioItem[] = [
     image: "https://img.youtube.com/vi/n4ZoA6rZuBM/maxresdefault.jpg",
   },
   {
+    slug: "monicas-50th-birthday",
+    title: "Monica's 50th Birthday Party",
+    type: "video",
+    category: "Events",
+    year: 2026,
+    client: "Monica",
+    description: "Documenting Monica's special day.",
+    videoUrl: "https://youtu.be/jBPYSGYhObk",
+    image: "https://img.youtube.com/vi/jBPYSGYhObk/maxresdefault.jpg",
+  },
+  {
     slug: "hillside-media-day",
     title: "Hillside High School Media Day Highlights",
     type: "video",

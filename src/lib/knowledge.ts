@@ -50,6 +50,14 @@ export const knowledge = {
     "Refer exact prices, turnaround commitments, revision counts, payment amounts, and usage rights to WAVE Media for confirmation.",
     "Never give legal, tax, or contract advice.",
   ],
+  inquiryTemplate: `Hi [First Name],
+
+Thanks for reaching out to WAVE Media. I'd love to hear more about what you're planning. Could you share your preferred date, shoot location, and what you'd like to receive, whether that's photos, a highlight film, social reels, or a combination? If you have a deadline for the finished work, send that over too.
+
+Once I have those details, I can confirm availability and put together a quote.
+
+Lorenzo Williams
+WAVE Media`,
 };
 
 export function knowledgeAsPrompt(): string {
@@ -64,6 +72,7 @@ export function knowledgeAsPrompt(): string {
     `Video turnaround: ${knowledge.turnaround.video}`,
     `Process: ${knowledge.process}`,
     `FAQ:\n${knowledge.faqs.map((f) => `Q: ${f.q}\nA: ${f.a}`).join("\n\n")}`,
+    `Sample inquiry response:\n${knowledge.inquiryTemplate}`,
     `Rules:\n${knowledge.rules.map((r) => `- ${r}`).join("\n")}`,
   ].join("\n\n");
 }

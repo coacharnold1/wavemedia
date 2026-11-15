@@ -3,8 +3,11 @@ import PlaceholderArt from "@/components/PlaceholderArt";
 import ServiceIcon from "@/components/ServiceIcon";
 import Link from "next/link";
 import { getFeatured } from "@/lib/portfolio";
+import { getHighlightedTestimonials } from "@/lib/testimonials";
 
 export default function HomePage() {
+  const testimonials = getHighlightedTestimonials(3);
+  
   return (
     <main className="min-h-screen bg-wave-black">
       {/* Hero Section */}
@@ -91,6 +94,40 @@ export default function HomePage() {
                 </p>
               </Link>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="py-24 bg-wave-black">
+        <div className="container-wave">
+          <h2 className="text-5xl font-bold mb-12 text-center">
+            What Clients <span className="text-accent">Say</span>
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+            {testimonials.map((testimonial) => (
+              <div
+                key={testimonial.id}
+                className="bg-wave-charcoal rounded-lg p-6 border border-wave-gold/20 hover:border-wave-gold/50 transition-colors"
+              >
+                <p className="text-wave-gray mb-4 line-clamp-4">
+                  &quot;{testimonial.content}&quot;
+                </p>
+                <div className="pt-4 border-t border-wave-gold/10">
+                  <p className="font-bold text-white">{testimonial.name}</p>
+                  {testimonial.verified && (
+                    <p className="text-wave-gold text-xs">✓ Verified {testimonial.source}</p>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="text-center">
+            <Link href="/testimonials" className="btn-secondary">
+              Read All Testimonials
+            </Link>
           </div>
         </div>
       </section>

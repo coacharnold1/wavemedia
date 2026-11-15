@@ -64,6 +64,11 @@ export default function Footer() {
                   About Us
                 </Link>
               </li>
+              <li>
+                <Link href="/testimonials" className="text-wave-gray hover:text-wave-gold transition-colors">
+                  Testimonials
+                </Link>
+              </li>
             </ul>
           </div>
 

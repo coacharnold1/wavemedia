@@ -117,6 +117,17 @@ export const portfolioItems: PortfolioItem[] = [
     image: "https://img.youtube.com/vi/ZenImZxQ2QY/maxresdefault.jpg",
   },
   {
+    slug: "mic-nickels-me-against-world",
+    title: "Mic Nickels - Me Against the World",
+    type: "video",
+    category: "Music Videos",
+    year: 2025,
+    client: "Mic Nickels",
+    description: "Music video for Mic Nickels' \"Me Against the World\".",
+    videoUrl: "https://www.youtube.com/watch?v=YQyEKSFeOJo",
+    image: "https://img.youtube.com/vi/YQyEKSFeOJo/maxresdefault.jpg",
+  },
+  {
     slug: "hillside-media-day",
     title: "Hillside High School Media Day Highlights",
     type: "video",

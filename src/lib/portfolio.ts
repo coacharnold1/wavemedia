@@ -128,6 +128,17 @@ export const portfolioItems: PortfolioItem[] = [
     image: "https://img.youtube.com/vi/YQyEKSFeOJo/maxresdefault.jpg",
   },
   {
+    slug: "felician-baccalaureate-2025",
+    title: "Felician University Baccalaureate Mass 2025",
+    type: "video",
+    category: "Events",
+    year: 2025,
+    client: "Felician University",
+    description: "A video documenting Felician University's annual Baccalaureate Mass.",
+    videoUrl: "https://youtu.be/ip0Xx8-Ma74",
+    image: "https://img.youtube.com/vi/ip0Xx8-Ma74/maxresdefault.jpg",
+  },
+  {
     slug: "hillside-media-day",
     title: "Hillside High School Media Day Highlights",
     type: "video",

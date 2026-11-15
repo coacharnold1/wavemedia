@@ -84,6 +84,17 @@ export const portfolioItems: PortfolioItem[] = [
     featured: true,
   },
   {
+    slug: "mandy-enright-dietician",
+    title: "Mandy Enright Dietician",
+    type: "video",
+    category: "Events",
+    year: 2026,
+    client: "Mandy Enright Dietician",
+    description: "A speaking engagement for a Licensed Dietitian.",
+    videoUrl: "https://youtu.be/n4ZoA6rZuBM",
+    image: "https://img.youtube.com/vi/n4ZoA6rZuBM/maxresdefault.jpg",
+  },
+  {
     slug: "hillside-media-day",
     title: "Hillside High School Media Day Highlights",
     type: "video",

@@ -55,7 +55,7 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className="bg-wave-black text-wave-white">
         <script
           type="application/ld+json"

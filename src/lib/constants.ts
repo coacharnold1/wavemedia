@@ -7,7 +7,10 @@ export const siteConfig = {
   phone: "+1 (908) 774-7760",
   // Social links are hidden until a URL is set
   social: {
-    instagram: "",
+    instagram: "https://instagram.com/wavemedianj",
+    facebook: "https://facebook.com/wavemedianj",
+    tiktok: "https://tiktok.com/@wavemedianj",
+    youtube: "https://youtube.com/@wavemedianj",
     linkedin: "",
   },
 };
@@ -16,6 +19,9 @@ export const phoneHref = `tel:${siteConfig.phone.replace(/[^+\d]/g, "")}`;
 
 export const socialLinks = [
   { label: "Instagram", href: siteConfig.social.instagram },
+  { label: "Facebook", href: siteConfig.social.facebook },
+  { label: "TikTok", href: siteConfig.social.tiktok },
+  { label: "YouTube", href: siteConfig.social.youtube },
   { label: "LinkedIn", href: siteConfig.social.linkedin },
 ].filter((s) => s.href);
 

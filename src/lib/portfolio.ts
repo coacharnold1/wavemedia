@@ -106,6 +106,17 @@ export const portfolioItems: PortfolioItem[] = [
     image: "https://img.youtube.com/vi/jBPYSGYhObk/maxresdefault.jpg",
   },
   {
+    slug: "king-of-newark-3-premiere",
+    title: "King of Newark 3 Movie Premiere",
+    type: "video",
+    category: "Events",
+    year: 2025,
+    client: "Director Hall",
+    description: "Video showcasing the Premiere of \"King Of Newark 3\" at Newark Cityplex Theaters.",
+    videoUrl: "https://youtu.be/ZenImZxQ2QY",
+    image: "https://img.youtube.com/vi/ZenImZxQ2QY/maxresdefault.jpg",
+  },
+  {
     slug: "hillside-media-day",
     title: "Hillside High School Media Day Highlights",
     type: "video",

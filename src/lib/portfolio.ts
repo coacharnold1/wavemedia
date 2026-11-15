@@ -139,6 +139,17 @@ export const portfolioItems: PortfolioItem[] = [
     image: "https://img.youtube.com/vi/ip0Xx8-Ma74/maxresdefault.jpg",
   },
   {
+    slug: "backward-forward-back-play",
+    title: "Backward Forward Back",
+    type: "video",
+    category: "Events",
+    year: 2025,
+    client: "Sue Wolf",
+    description: "A play directed by Sue Wolf and starring L. James.",
+    videoUrl: "https://youtu.be/oXjBaJzmTNw",
+    image: "https://img.youtube.com/vi/oXjBaJzmTNw/maxresdefault.jpg",
+  },
+  {
     slug: "hillside-media-day",
     title: "Hillside High School Media Day Highlights",
     type: "video",

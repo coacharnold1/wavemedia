@@ -98,6 +98,18 @@ export const portfolioItems: PortfolioItem[] = [
     featured: true,
   },
   {
+    slug: "squad-kentucky-derby",
+    title: "The Squad Kentucky Derby Event",
+    type: "video",
+    category: "Events",
+    year: 2026,
+    client: "The Squad",
+    description: "The Squad is a Men's Social Organization comprised of successful gentlemen with an eye towards class. Every year they host a Kentucky Derby event at an exclusive cigar club. For 2026, WAVE Media was asked to document this wonderful event.",
+    videoUrl: "https://youtu.be/3KoejxnllpQ",
+    image: "https://img.youtube.com/vi/3KoejxnllpQ/maxresdefault.jpg",
+    featured: true,
+  },
+  {
     slug: "hillside-media-day",
     title: "Hillside High School Media Day Highlights",
     type: "video",

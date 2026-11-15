@@ -36,6 +36,18 @@ export const photographyCategories = [
 // Placeholder entries: replace with real projects, videoUrl and image paths.
 export const portfolioItems: PortfolioItem[] = [
   {
+    slug: "91-percent-documentary",
+    title: "91% The Story of Determination and Triumph",
+    type: "video",
+    category: "Documentaries",
+    year: 2025,
+    client: "Director Hall",
+    description: "Paterson, New Jersey — a city that moves with an unbreakable rhythm. Buses hum, footsteps echo, and dreams push forward long after the sun goes down. Every block carries a story, and every story belongs to a dreamer fighting to shape a new tomorrow. In the heart of this relentless city stands a school that dared to believe in its students: College Achieve Paterson. Here, scholars aren't defined by circumstance — they redefine it. CAPS becomes more than a building; it becomes a promise. A place where teachers don't just deliver lessons, they see their students — their hunger, their fire, and their potential.",
+    videoUrl: "https://www.youtube.com/watch?v=-OBWLJRqpvY",
+    image: "/portfolio/award.jpg",
+    featured: true,
+  },
+  {
     slug: "brand-launch-spot",
     title: "Brand Launch Spot",
     type: "video",

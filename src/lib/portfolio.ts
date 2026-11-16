@@ -57,7 +57,7 @@ export const portfolioItems: PortfolioItem[] = [
     description: "A wedding film that lets the couple revisit their celebration and see it from a new perspective—a keepsake they can return to on anniversaries and share with loved ones.",
     videoUrl: "https://youtu.be/p2XIfYMdocI",
     image: "https://img.youtube.com/vi/p2XIfYMdocI/maxresdefault.jpg",
-    featured: true,
+    featured: false,
   },
   {
     slug: "squad-breast-cancer-event",
@@ -69,7 +69,7 @@ export const portfolioItems: PortfolioItem[] = [
     description: "The Squad Breast Cancer Event",
     videoUrl: "https://youtu.be/-EYvxAsl4ag",
     image: "https://img.youtube.com/vi/-EYvxAsl4ag/maxresdefault.jpg",
-    featured: true,
+    featured: false,
   },
   {
     slug: "squad-kentucky-derby",
@@ -81,7 +81,7 @@ export const portfolioItems: PortfolioItem[] = [
     description: "The Squad is a Men's Social Organization comprised of successful gentlemen with an eye towards class. Every year they host a Kentucky Derby event at an exclusive cigar club. For 2026, WAVE Media was asked to document this wonderful event.",
     videoUrl: "https://youtu.be/3KoejxnllpQ",
     image: "https://img.youtube.com/vi/3KoejxnllpQ/maxresdefault.jpg",
-    featured: true,
+    featured: false,
   },
   {
     slug: "mandy-enright-dietician",

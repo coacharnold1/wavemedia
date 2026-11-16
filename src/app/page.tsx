@@ -50,7 +50,7 @@ export default function HomePage() {
             Featured <span className="text-accent">Work</span>
           </h2>
 
-          {/* Portfolio Grid Skeleton */}
+          {/* Portfolio Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {getFeatured().map((item) => (
               <Link
@@ -58,9 +58,19 @@ export default function HomePage() {
                 href={`/work/${item.slug}`}
                 className="bg-wave-dark rounded-lg overflow-hidden hover:transform hover:scale-105 transition-all duration-300 group"
               >
-                <div className="relative w-full h-64 flex items-center justify-center">
-                  <PlaceholderArt label={item.category} />
-                  <div aria-hidden="true" className="relative text-4xl text-wave-gold">
+                <div className="relative w-full h-64 flex items-center justify-center bg-wave-charcoal">
+                  {item.image ? (
+                    <Image
+                      src={item.image}
+                      alt={item.title}
+                      width={400}
+                      height={300}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <PlaceholderArt label={item.category} />
+                  )}
+                  <div aria-hidden="true" className="absolute text-4xl text-wave-gold opacity-80 group-hover:opacity-100 transition-opacity">
                     {item.type === "video" ? "▶" : "◉"}
                   </div>
                 </div>

@@ -298,7 +298,7 @@ export const portfolioItems: PortfolioItem[] = [
   },
   {
     slug: 'img-7168',
-    title: 'The Proffesot',
+    title: 'The Proffesor',
     type: 'photo',
     category: 'Events',
     year: 2026,

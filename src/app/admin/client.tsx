@@ -62,8 +62,15 @@ export default function AdminClient() {
   const loadPortfolio = async () => {
     setLoading(true);
     try {
-      const response = await fetch('/api/admin/portfolio/get');
-      const data = await response.json();
+      // Try database first (for Vercel/production)
+      let response = await fetch('/api/db/portfolio');
+      let data = await response.json();
+
+      // Fallback to file-based endpoint if database not available
+      if (!data.success) {
+        response = await fetch('/api/admin/portfolio/get');
+        data = await response.json();
+      }
 
       if (data.success && Array.isArray(data.items)) {
         setItems(data.items);
@@ -85,16 +92,27 @@ export default function AdminClient() {
   const savePortfolio = async () => {
     setSaving(true);
     try {
-      const response = await fetch('/api/admin/portfolio/save', {
+      // Try database first (for Vercel/production)
+      let response = await fetch('/api/db/portfolio/save', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ items }),
       });
 
-      const data = await response.json();
+      let data = await response.json();
+
+      // Fallback to file-based endpoint if database not available
+      if (!data.success) {
+        response = await fetch('/api/admin/portfolio/save', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ items }),
+        });
+        data = await response.json();
+      }
 
       if (data.success) {
-        showMessage('success', `✅ Saved ${data.count} items to portfolio.ts`);
+        showMessage('success', `✅ Saved ${data.count} items`);
       } else {
         showMessage('error', `❌ ${data.error}`);
       }

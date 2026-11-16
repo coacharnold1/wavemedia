@@ -16,7 +16,7 @@ export default function HomePage() {
           autoPlay
           muted
           loop
-          className="absolute inset-0 w-full h-full object-cover object-center opacity-30 transform -translate-y-16"
+          className="absolute inset-0 w-full h-full object-cover object-center opacity-30 transform -translate-x-36 -translate-y-24"
           aria-hidden="true"
         >
           <source src="/brand/bg-animation.mp4" type="video/mp4" />

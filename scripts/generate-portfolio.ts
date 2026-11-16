@@ -118,16 +118,37 @@ ${items
   .join('\n')}
 ];
 
-export function getFeatured() {
-  return portfolioItems.filter((item) => item.featured);
+export function getItemsByType(type: PortfolioType) {
+  return portfolioItems.filter((item) => item.type === type);
 }
 
-export function getByCategory(category: string) {
-  return portfolioItems.filter((item) => item.category === category);
-}
-
-export function getBySlug(slug: string) {
+export function getItem(slug: string) {
   return portfolioItems.find((item) => item.slug === slug);
+}
+
+export function getFeatured(limit = 3) {
+  return portfolioItems.filter((item) => item.featured).slice(0, limit);
+}
+
+export function getEmbedUrl(url: string): string | null {
+  try {
+    const u = new URL(url);
+    const host = u.hostname.replace(/^www\\./, "");
+    if (host === "youtu.be") {
+      return \`https://www.youtube.com/embed/\${u.pathname.slice(1)}\`;
+    }
+    if (host === "youtube.com") {
+      const id = u.searchParams.get("v");
+      return id ? \`https://www.youtube.com/embed/\${id}\` : null;
+    }
+    if (host === "vimeo.com") {
+      const id = u.pathname.split("/").filter(Boolean)[0];
+      return id ? \`https://player.vimeo.com/video/\${id}\` : null;
+    }
+  } catch {
+    // fall through
+  }
+  return null;
 }
 `;
 

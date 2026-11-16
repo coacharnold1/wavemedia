@@ -127,12 +127,6 @@ export default function AdminClient() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // For files > 4.5MB, show a message
-    if (file.size > 4.5 * 1024 * 1024) {
-      showMessage('error', '❌ File too large for upload (max 4.5MB on Vercel). Please use a smaller file.');
-      return;
-    }
-
     setUploadingFile(true);
     try {
       const formData = new FormData();

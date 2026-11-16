@@ -22,6 +22,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Check file size (50MB limit)
+    if (file.size > 50 * 1024 * 1024) {
+      return Response.json(
+        { error: 'File too large (max 50MB)' },
+        { status: 413 }
+      );
+    }
+
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 

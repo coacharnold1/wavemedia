@@ -193,6 +193,7 @@ export const portfolioItems: PortfolioItem[] = [
     description: "Promotional Video for Hillside Public School's opening of the 2026 School Year",
     videoUrl: "https://youtu.be/plWpBHdzer0",
     image: "https://img.youtube.com/vi/plWpBHdzer0/maxresdefault.jpg",
+    featured: true,
   },
   // Photo Portfolio Items
   {

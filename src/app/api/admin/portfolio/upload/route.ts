@@ -1,3 +1,4 @@
+import { put } from '@vercel/blob';
 import { writeFileSync } from 'fs';
 import { join } from 'path';
 import { NextRequest } from 'next/server';
@@ -30,11 +31,29 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const filename = `${Date.now()}-${file.name.replace(/[^a-z0-9.-]/gi, '_')}`;
+
+    // Try Vercel Blob first (production on Vercel)
+    if (process.env.BLOB_READ_WRITE_TOKEN) {
+      try {
+        const blob = await put(`portfolio/${filename}`, file, {
+          access: 'public',
+        });
+
+        return Response.json({
+          success: true,
+          filename,
+          path: blob.url,
+        });
+      } catch (blobError) {
+        console.error('Vercel Blob upload failed:', blobError);
+        // Fall through to local filesystem
+      }
+    }
+
+    // Fallback to local filesystem (development/localhost)
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
-
-    // Save to public/portfolio/
-    const filename = `${Date.now()}-${file.name.replace(/[^a-z0-9.-]/gi, '_')}`;
     const filepath = join(process.cwd(), 'public/portfolio', filename);
 
     writeFileSync(filepath, buffer);

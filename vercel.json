@@ -1,0 +1,8 @@
+{
+  "functions": {
+    "src/app/api/admin/portfolio/upload/route.ts": {
+      "maxDuration": 60,
+      "memory": 3008
+    }
+  }
+}

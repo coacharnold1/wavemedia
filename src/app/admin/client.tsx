@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { upload } from '@vercel/blob/client';
 import { photographyCategories, cinematographyCategories } from '@/lib/portfolio';
 
 type PortfolioType = 'video' | 'photo';
@@ -129,35 +130,26 @@ export default function AdminClient() {
 
     setUploadingFile(true);
     try {
-      const formData = new FormData();
-      formData.append('file', file);
-
-      const response = await fetch('/api/admin/portfolio/upload', {
-        method: 'POST',
-        body: formData,
+      // Use Vercel Blob client SDK for direct upload (bypasses 4.5MB serverless limit)
+      const blob = await upload(`portfolio/${Date.now()}-${file.name}`, file, {
+        access: 'public',
       });
 
-      const data = await response.json();
-
-      if (data.success) {
-        // Add new photo item
-        const newItem: PortfolioItem = {
-          slug: file.name.replace(/\.[^/.]+$/, '').toLowerCase().replace(/[^a-z0-9]+/g, '-'),
-          title: 'Untitled Photo',
-          type: 'photo',
-          category: 'Events',
-          year: new Date().getFullYear(),
-          description: '',
-          image: data.path,
-        };
-        setItems([...items, newItem]);
-        showMessage('success', '✅ Photo uploaded and added to editor');
-        setShowNewForm(false);
-      } else {
-        showMessage('error', `❌ ${data.error}`);
-      }
+      // Add new photo item
+      const newItem: PortfolioItem = {
+        slug: file.name.replace(/\.[^/.]+$/, '').toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+        title: 'Untitled Photo',
+        type: 'photo',
+        category: 'Events',
+        year: new Date().getFullYear(),
+        description: '',
+        image: blob.url,
+      };
+      setItems([...items, newItem]);
+      showMessage('success', '✅ Photo uploaded and added to editor');
+      setShowNewForm(false);
     } catch (error) {
-      showMessage('error', '❌ Error uploading photo');
+      showMessage('error', `❌ Error uploading photo: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setUploadingFile(false);
     }

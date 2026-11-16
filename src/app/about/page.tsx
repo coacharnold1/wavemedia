@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "About WAVE Media | Our Story",
@@ -47,9 +48,14 @@ export default function AboutPage() {
           <div className="max-w-3xl mx-auto mb-20 pb-20 border-b border-wave-gold/20">
             <div className="flex flex-col md:flex-row gap-8 items-start">
               <div className="md:w-1/3 flex-shrink-0">
-                <div className="bg-wave-charcoal rounded-lg aspect-square flex items-center justify-center border border-wave-gold/20">
-                  {/* Headshot will go here: /public/team/lorenzo-williams.jpg */}
-                  <p className="text-wave-gray text-sm text-center px-4">Headshot placeholder</p>
+                <div className="bg-wave-charcoal rounded-lg aspect-square overflow-hidden border border-wave-gold/20">
+                  <Image
+                    src="/team/lorenzo-williams.jpg"
+                    alt="Lorenzo Williams"
+                    width={400}
+                    height={400}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
               </div>
               <div className="md:w-2/3">
@@ -74,9 +80,14 @@ export default function AboutPage() {
           <div className="max-w-3xl mx-auto">
             <div className="flex flex-col md:flex-row gap-8 items-start">
               <div className="md:w-1/3 flex-shrink-0">
-                <div className="bg-wave-charcoal rounded-lg aspect-square flex items-center justify-center border border-wave-gold/20">
-                  {/* Headshot will go here: /public/team/tim-arnold.jpg */}
-                  <p className="text-wave-gray text-sm text-center px-4">Headshot placeholder</p>
+                <div className="bg-wave-charcoal rounded-lg aspect-square overflow-hidden border border-wave-gold/20">
+                  <Image
+                    src="/team/tim-arnold.jpg"
+                    alt="Tim Arnold"
+                    width={400}
+                    height={400}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
               </div>
               <div className="md:w-2/3">

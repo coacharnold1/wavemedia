@@ -11,18 +11,26 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       body,
       request,
       onBeforeGenerateToken: async () => {
-        return {};
+        // Allow any authenticated admin to upload
+        // Token generation is handled by Vercel Blob API
+        return {
+          allowedContentTypes: ['image/jpeg', 'image/png', 'image/gif', 'image/webp'],
+          tokenPayload: JSON.stringify({ uploadedBy: 'admin' }),
+        };
       },
-      onUploadCompleted: async () => {
-        // Optionally: log upload completion
+      onUploadCompleted: async ({ blob }) => {
+        console.log(`Uploaded: ${blob.url}`);
       },
     });
 
     return NextResponse.json(jsonResponse);
   } catch (error) {
+    console.error('Upload handle error:', error);
     return NextResponse.json(
       { error: (error as Error).message },
       { status: 400 }
     );
   }
 }
+
+

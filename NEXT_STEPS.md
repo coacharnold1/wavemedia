@@ -22,9 +22,27 @@ _Last updated: November 15, 2026_
 
 ---
 
-## 1. IMMEDIATE: Photo Organization (This Week)
+## 1. IMMEDIATE: Admin Photo Editor with Direct Save (This Week)
 
-### Log in to Admin Portal
+### Build Direct-Save Photo Editor
+**Feature:** Photo editing in admin console with "Save" button that directly updates `src/lib/portfolio.ts`
+
+**Scope:**
+- [ ] Add form to admin panel for adding/editing photos
+- [ ] Fields: slug, title, category, year, description, image path
+- [ ] Image upload support → `/public/portfolio/`
+- [ ] Validation before save (required fields, unique slug)
+- [ ] Direct save to `src/lib/portfolio.ts` (no copy/paste needed)
+- [ ] Display success/error messages
+- [ ] Show all existing photos in a table for quick editing
+
+**Result:** Click "Save" in admin, photos auto-appear on site ✅
+
+---
+
+## 2. THEN: Photo Organization (If Using External Tool)
+
+### Log in to Admin Portal (Optional if not using new editor)
 1. Go to: https://wavemedia-six.vercel.app/admin
 2. Enter password: `waveadmin2024`
 3. Click **"Scan for Photos"** to load 42 images
@@ -50,7 +68,7 @@ For each photo:
 - [ ] Resend account + API key, and the email address that receives inquiries
 ---
 
-## 2. NEXT: Content Completion & Team Assets
+## 3. THEN: Content Completion & Team Assets
 
 ### Add Team Headshots
 Send:
@@ -78,7 +96,7 @@ Fill in `src/lib/knowledge.ts` for AI-assisted replies:
 
 ---
 
-## 3. THEN: Form Integration & Automation
+## 4. THEN: Form Integration & Automation
 
 ### Email Delivery Setup
 - [ ] Confirm receiving email address
@@ -99,7 +117,7 @@ Fill in `src/lib/knowledge.ts` for AI-assisted replies:
 
 ---
 
-## 4. FINAL: Optimization & Deployment
+## 5. FINAL: Optimization & Deployment
 
 - [ ] Image optimization for web performance
 - [ ] Lighthouse audit and fixes
@@ -112,7 +130,7 @@ Fill in `src/lib/knowledge.ts` for AI-assisted replies:
 
 ---
 
-## 5. Environment Variables (Vercel)
+## 6. Environment Variables (Vercel)
 
 Currently set:
 - ✅ `ADMIN_PASSWORD` = `waveadmin2024`
@@ -126,7 +144,7 @@ Need to add (when ready):
 
 ---
 
-## 6. Known Placeholders
+## 7. Known Placeholders
 
 | Item | Where | Status |
 | --- | --- | --- |
@@ -140,7 +158,7 @@ Need to add (when ready):
 
 ---
 
-## 7. Quick Reference: File Locations
+## 8. Quick Reference: File Locations
 
 | What to Change | File | How |
 | --- | --- | --- |
@@ -155,7 +173,7 @@ Need to add (when ready):
 
 ---
 
-## 8. Timeline Suggestions
+## 9. Timeline Suggestions
 
 **Week 1 (This Week):** Organize photos in admin portal  
 **Week 2:** Add headshots, verify copy, fill AI knowledge base  
@@ -167,4 +185,4 @@ Need to add (when ready):
 ---
 
 **Last Updated:** November 15, 2026  
-**Next Phase:** Photo organization via admin portal
+**Next Phase:** Build direct-save photo editor in admin console

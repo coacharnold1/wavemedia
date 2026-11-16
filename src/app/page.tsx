@@ -11,7 +11,16 @@ export default function HomePage() {
   return (
     <main className="min-h-screen bg-wave-black">
       {/* Hero Section */}
-      <section className="relative w-full h-screen bg-gradient-to-b from-wave-black via-wave-charcoal to-wave-black cinematic-overlay flex items-center justify-center">
+      <section className="relative w-full h-screen bg-gradient-to-b from-wave-black via-wave-charcoal to-wave-black cinematic-overlay flex items-center justify-center overflow-hidden">
+        <video
+          autoPlay
+          muted
+          loop
+          className="absolute inset-0 w-full h-full object-cover opacity-30"
+          aria-hidden="true"
+        >
+          <source src="/brand/bg-animation.mp4" type="video/mp4" />
+        </video>
         <div className="text-center z-10">
           <Image
             src="/brand/logo-mark.png"

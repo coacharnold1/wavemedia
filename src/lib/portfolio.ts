@@ -308,7 +308,7 @@ export const portfolioItems: PortfolioItem[] = [
   },
   {
     slug: 'img-7169',
-    title: 'Old TIme ',
+    title: 'Old Time ',
     type: 'photo',
     category: 'Events',
     year: 2026,
@@ -358,7 +358,7 @@ export const portfolioItems: PortfolioItem[] = [
   },
   {
     slug: 'img-7174',
-    title: 'Couple ',
+    title: 'HappyCouple ',
     type: 'photo',
     category: 'Events',
     year: 2026,
@@ -388,7 +388,7 @@ export const portfolioItems: PortfolioItem[] = [
   },
   {
     slug: 'img-7177',
-    title: 'A Man with a hat',
+    title: 'A Man with a Hat',
     type: 'photo',
     category: 'Events',
     year: 2026,
@@ -458,11 +458,11 @@ export const portfolioItems: PortfolioItem[] = [
   },
   {
     slug: 'img-7184',
-    title: 'Untitled Photo',
+    title: 'The Grace of a Smile',
     type: 'photo',
     category: 'Events',
     year: 2026,
-    description: 'e Grace of a Smile',
+    description: 'The Grace of a Smile',
     image: '/portfolio/IMG_7184.jpg',
     featured: false,
   },
@@ -488,7 +488,7 @@ export const portfolioItems: PortfolioItem[] = [
   },
   {
     slug: 'img-7187',
-    title: 'Drop the hammer',
+    title: 'Drop the Hammer',
     type: 'photo',
     category: 'Sports',
     year: 2026,
@@ -618,7 +618,7 @@ export const portfolioItems: PortfolioItem[] = [
   },
   {
     slug: 'award',
-    title: 'Untitled Photo',
+    title: 'Awards',
     type: 'photo',
     category: 'Events',
     year: 2026,

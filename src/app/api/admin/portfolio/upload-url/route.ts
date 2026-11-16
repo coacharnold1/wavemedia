@@ -36,9 +36,15 @@ export async function POST(request: NextRequest) {
     const supabaseUrl = `https://${projectId}.supabase.co`;
     const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
 
+    console.log('Upload URL endpoint:');
+    console.log('- supabaseUrl:', supabaseUrl);
+    console.log('- supabaseAnonKey exists:', !!supabaseAnonKey);
+    console.log('- supabaseAnonKey length:', supabaseAnonKey?.length || 0);
+
     if (!supabaseAnonKey) {
+      console.error('ERROR: SUPABASE_ANON_KEY is not set!');
       return NextResponse.json(
-        { error: 'Supabase not fully configured' },
+        { error: 'Supabase not fully configured (missing SUPABASE_ANON_KEY)' },
         { status: 500 }
       );
     }

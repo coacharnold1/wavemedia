@@ -1,39 +1,41 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { photographyCategories } from '@/lib/portfolio';
+import { photographyCategories, cinematographyCategories } from '@/lib/portfolio';
 
-type PhotoCategory = typeof photographyCategories[number];
+type PortfolioType = 'video' | 'photo';
 
-type PhotoWithCategory = {
-  id: string;
+interface PortfolioItem {
   slug: string;
   title: string;
-  image: string;
+  type: PortfolioType;
+  category: string;
+  year: number;
+  client?: string;
   description: string;
-  date: string;
-  category: PhotoCategory;
-  featured: boolean;
-};
-
-const categoryLabels: Record<string, string> = {
-  'Sports': 'Sports',
-  'Portraits': 'Portraits',
-  'Events': 'Events',
-  'Corporate': 'Corporate',
-  'Lifestyle': 'Lifestyle',
-};
+  videoUrl?: string;
+  image?: string;
+  featured?: boolean;
+}
 
 export default function AdminClient() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [passwordInput, setPasswordInput] = useState('');
-  const [photos, setPhotos] = useState<PhotoWithCategory[]>([]);
-  const [selectedFeatured, setSelectedFeatured] = useState<string[]>([]);
-  const [newPhotos, setNewPhotos] = useState<PhotoWithCategory[]>([]);
-  const [isScanning, setIsScanning] = useState(false);
-  const [showNewPhotos, setShowNewPhotos] = useState(false);
-  const [filterCategory, setFilterCategory] = useState<PhotoCategory | 'all'>('all');
+  const [items, setItems] = useState<PortfolioItem[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [showNewForm, setShowNewForm] = useState(false);
+  const [uploadingFile, setUploadingFile] = useState(false);
+  const [filterType, setFilterType] = useState<'all' | 'video' | 'photo'>('all');
+
+  // Load portfolio on auth
+  useEffect(() => {
+    if (isAuthenticated && items.length === 0) {
+      loadPortfolio();
+    }
+  }, [isAuthenticated]);
 
   const handlePasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,147 +45,164 @@ export default function AdminClient() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ password: passwordInput }),
       });
-      
+
       const data = await response.json();
-      
+
       if (data.valid) {
         setIsAuthenticated(true);
         setPasswordInput('');
-        // Scan immediately after auth
-        setTimeout(handleScanNewPhotos, 500);
       } else {
-        alert('❌ Incorrect password');
-        setPasswordInput('');
+        showMessage('error', '❌ Incorrect password');
       }
     } catch (error) {
-      alert('❌ Error verifying password');
-      console.error(error);
+      showMessage('error', '❌ Error verifying password');
     }
   };
 
-  const handleScanNewPhotos = async () => {
-    setIsScanning(true);
+  const loadPortfolio = async () => {
+    setLoading(true);
     try {
-      const response = await fetch('/api/admin/sync-portfolio', {
-        method: 'POST',
-      });
-      
+      const response = await fetch('/api/admin/portfolio/get');
       const data = await response.json();
-      
-      if (data.newCount > 0) {
-        setNewPhotos(data.new);
-        setShowNewPhotos(true);
-      }
-      
-      if (data.newCount === 0) {
-        alert('✓ Scan complete! No new photos found.');
+
+      if (data.success && Array.isArray(data.items)) {
+        setItems(data.items);
+      } else {
+        showMessage('error', '❌ Failed to load portfolio');
       }
     } catch (error) {
-      alert('❌ Error scanning photos');
-      console.error(error);
+      showMessage('error', '❌ Error loading portfolio');
     } finally {
-      setIsScanning(false);
+      setLoading(false);
     }
   };
 
-  const handleAddNewPhotos = () => {
-    setPhotos((prev) => [...prev, ...newPhotos]);
-    setNewPhotos([]);
-    setShowNewPhotos(false);
-    alert(`✓ Added ${newPhotos.length} new photos to editor!`);
+  const showMessage = (type: 'success' | 'error', text: string) => {
+    setMessage({ type, text });
+    setTimeout(() => setMessage(null), 4000);
   };
 
-  const updateCategory = (slug: string, category: PhotoCategory) => {
-    setPhotos((prev) =>
-      prev.map((p) => (p.slug === slug ? { ...p, category } : p))
+  const savePortfolio = async () => {
+    setSaving(true);
+    try {
+      const response = await fetch('/api/admin/portfolio/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ items }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        showMessage('success', `✅ Saved ${data.count} items to portfolio.ts`);
+      } else {
+        showMessage('error', `❌ ${data.error}`);
+      }
+    } catch (error) {
+      showMessage('error', '❌ Error saving portfolio');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleUploadPhoto = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadingFile(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await fetch('/api/admin/portfolio/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        // Add new photo item
+        const newItem: PortfolioItem = {
+          slug: file.name.replace(/\.[^/.]+$/, '').toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+          title: 'Untitled Photo',
+          type: 'photo',
+          category: 'Events',
+          year: new Date().getFullYear(),
+          description: '',
+          image: data.path,
+        };
+        setItems([...items, newItem]);
+        showMessage('success', '✅ Photo uploaded and added to editor');
+        setShowNewForm(false);
+      } else {
+        showMessage('error', `❌ ${data.error}`);
+      }
+    } catch (error) {
+      showMessage('error', '❌ Error uploading photo');
+    } finally {
+      setUploadingFile(false);
+    }
+  };
+
+  const addNewItem = (type: PortfolioType) => {
+    const newItem: PortfolioItem = {
+      slug: `new-${type}-${Date.now()}`,
+      title: `New ${type === 'video' ? 'Video' : 'Photo'}`,
+      type,
+      category: 'Events',
+      year: new Date().getFullYear(),
+      description: '',
+      ...(type === 'video' ? { videoUrl: '' } : { image: '' }),
+    } as PortfolioItem;
+    setItems([...items, newItem]);
+    setShowNewForm(false);
+  };
+
+  const updateItem = (index: number, field: keyof PortfolioItem, value: any) => {
+    setItems((prev) =>
+      prev.map((item, i) =>
+        i === index ? { ...item, [field]: value } : item
+      )
     );
   };
 
-  const updateTitle = (slug: string, title: string) => {
-    setPhotos((prev) =>
-      prev.map((p) => (p.slug === slug ? { ...p, title } : p))
-    );
+  const deleteItem = (index: number) => {
+    setItems(items.filter((_, i) => i !== index));
   };
 
-  const updateDescription = (slug: string, description: string) => {
-    setPhotos((prev) =>
-      prev.map((p) => (p.slug === slug ? { ...p, description } : p))
-    );
+  const duplicateItem = (index: number) => {
+    const item = items[index];
+    if (!item) return;
+    const duplicate: PortfolioItem = {
+      slug: `${item.slug}-copy-${Date.now()}`,
+      title: `${item.title} (Copy)`,
+      type: item.type,
+      category: item.category,
+      year: item.year,
+      description: item.description,
+      client: item.client,
+      videoUrl: item.videoUrl,
+      image: item.image,
+      featured: item.featured,
+    };
+    setItems([...items, duplicate]);
   };
 
-  const updateDate = (slug: string, date: string) => {
-    setPhotos((prev) =>
-      prev.map((p) => (p.slug === slug ? { ...p, date } : p))
-    );
-  };
-
-  const deletePhoto = (slug: string) => {
-    setPhotos((prev) => prev.filter((p) => p.slug !== slug));
-    setSelectedFeatured((prev) => prev.filter((pid) => pid !== slug));
-  };
-
-  const toggleFeatured = (slug: string) => {
-    setSelectedFeatured((prev) =>
-      prev.includes(slug) ? prev.filter((pid) => pid !== slug) : [...prev, slug]
-    );
-  };
-
-  const filteredPhotos = useMemo(() => {
-    return filterCategory === 'all' ? photos : photos.filter((p) => p.category === filterCategory);
-  }, [photos, filterCategory]);
-
-  const generateCode = () => {
-    const code = `// Generated by Admin Photo Manager
-// Paste into src/lib/portfolio.ts after existing video entries
-
-export const portfolioItems: PortfolioItem[] = [
-  // ... existing video entries ...
-${photos
-  .map(
-    (photo) => `  {
-    slug: '${photo.slug}',
-    title: '${photo.title.replace(/'/g, "\\'")}',
-    type: 'photo',
-    category: '${photo.category}',
-    year: ${new Date(photo.date).getFullYear()},
-    description: '${photo.description.replace(/'/g, "\\'")}',
-    image: '${photo.image}',
-    featured: ${selectedFeatured.includes(photo.slug)},
-  },`
-  )
-  .join('\n')}
-];`;
-    return code;
-  };
-
-  const handleDownload = () => {
-    const code = generateCode();
-    const element = document.createElement('a');
-    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(code));
-    element.setAttribute('download', 'portfolio-photos.ts');
-    element.style.display = 'none';
-    document.body.appendChild(element);
-    element.click();
-    document.body.removeChild(element);
-  };
-
-  const handleCopyCode = () => {
-    const code = generateCode();
-    navigator.clipboard.writeText(code).then(() => {
-      alert('✓ Code copied to clipboard!');
-    });
-  };
+  const filteredItems = items.filter((item) =>
+    filterType === 'all' ? true : item.type === filterType
+  );
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4">
-        <div className="bg-gray-800 rounded-lg shadow-xl p-8 w-full max-w-md">
+      <div className="min-h-screen flex items-center justify-center p-4 bg-wave-black">
+        <div className="bg-wave-charcoal rounded-lg shadow-xl p-8 w-full max-w-md border border-wave-dark">
           <h1 className="text-3xl font-bold text-wave-gold mb-6 text-center">Admin Portal</h1>
-          <p className="text-gray-300 text-center mb-6">WAVE Media Photo Portfolio Manager</p>
-          
+          <p className="text-wave-gray text-center mb-6">WAVE Media Portfolio Manager</p>
+
           <form onSubmit={handlePasswordSubmit} className="space-y-4">
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-2">
+              <label htmlFor="password" className="block text-sm font-medium text-wave-gray mb-2">
                 Password
               </label>
               <input
@@ -191,7 +210,7 @@ ${photos
                 type="password"
                 value={passwordInput}
                 onChange={(e) => setPasswordInput(e.target.value)}
-                className="w-full px-4 py-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-wave-gold focus:outline-none"
+                className="w-full px-4 py-2 bg-wave-dark text-white rounded-lg border border-wave-dark focus:border-wave-gold focus:outline-none"
                 placeholder="Enter admin password"
                 autoFocus
               />
@@ -204,7 +223,7 @@ ${photos
             </button>
           </form>
 
-          <div className="mt-6 pt-6 border-t border-gray-700">
+          <div className="mt-6 pt-6 border-t border-wave-dark">
             <a href="/" className="text-wave-gold hover:text-yellow-400 text-sm">
               ← Back to Site
             </a>
@@ -215,209 +234,309 @@ ${photos
   }
 
   return (
-    <div className="min-h-screen p-6">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-wave-black p-6">
+      <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex justify-between items-start mb-8">
           <div>
-            <h1 className="text-4xl font-bold text-wave-gold">📸 Photo Portfolio Manager</h1>
-            <p className="text-gray-400 mt-2">Organize, edit, and manage your photo portfolio</p>
+            <h1 className="text-4xl font-bold text-wave-gold">📸 Portfolio Manager</h1>
+            <p className="text-wave-gray mt-2">Manage videos and photos</p>
           </div>
-          <div className="space-y-2">
+          <div className="space-y-2 text-right">
             <button
               onClick={() => setIsAuthenticated(false)}
-              className="block w-full text-right text-gray-400 hover:text-wave-gold text-sm transition"
+              className="text-wave-gold hover:text-yellow-400 text-sm transition block"
             >
               Sign Out
             </button>
-            <a href="/" className="block text-gray-400 hover:text-wave-gold text-sm transition">
+            <a href="/" className="text-wave-gold hover:text-yellow-400 text-sm transition block">
               ← Back to Site
             </a>
           </div>
         </div>
 
-        {/* Action Buttons */}
-        <div className="bg-gray-800 rounded-lg p-6 mb-6 border border-gray-700">
-          <div className="flex flex-wrap gap-4 mb-4">
-            {!showNewPhotos && (
-              <button
-                onClick={handleScanNewPhotos}
-                disabled={isScanning}
-                className="bg-wave-gold hover:bg-yellow-500 disabled:opacity-50 text-wave-black font-bold py-2 px-6 rounded-lg transition"
-              >
-                {isScanning ? '🔄 Scanning...' : '🔍 Scan for Photos'}
-              </button>
-            )}
-            
-            {photos.length > 0 && (
-              <>
-                <button
-                  onClick={handleCopyCode}
-                  className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg transition"
-                >
-                  📋 Copy Code
-                </button>
-                <button
-                  onClick={handleDownload}
-                  className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-lg transition"
-                >
-                  ⬇️ Download
-                </button>
-              </>
-            )}
+        {/* Message Alert */}
+        {message && (
+          <div
+            className={`mb-6 p-4 rounded-lg border ${
+              message.type === 'success'
+                ? 'bg-green-900 border-green-700 text-green-200'
+                : 'bg-red-900 border-red-700 text-red-200'
+            }`}
+          >
+            {message.text}
           </div>
-          
-          <div className="text-sm text-gray-300">
-            <p><strong>Photos in editor:</strong> {photos.length}</p>
-            <p><strong>Featured:</strong> {selectedFeatured.length}</p>
+        )}
+
+        {/* Action Bar */}
+        <div className="bg-wave-charcoal rounded-lg p-6 mb-6 border border-wave-dark space-y-4">
+          <div className="flex flex-wrap gap-4">
+            <button
+              onClick={() => setShowNewForm(!showNewForm)}
+              className="bg-wave-gold hover:bg-yellow-500 text-wave-black font-bold py-2 px-6 rounded-lg transition"
+            >
+              + Add Item
+            </button>
+            <button
+              onClick={savePortfolio}
+              disabled={saving || loading}
+              className="bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white font-bold py-2 px-6 rounded-lg transition"
+            >
+              {saving ? '💾 Saving...' : '💾 Save to portfolio.ts'}
+            </button>
+            <button
+              onClick={loadPortfolio}
+              disabled={loading}
+              className="bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-bold py-2 px-6 rounded-lg transition"
+            >
+              {loading ? '🔄 Loading...' : '🔄 Reload'}
+            </button>
+          </div>
+
+          {/* New Item Form */}
+          {showNewForm && (
+            <div className="border-t border-wave-dark pt-4 space-y-3">
+              <p className="text-wave-gray text-sm">Add new item:</p>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => addNewItem('video')}
+                  className="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded transition"
+                >
+                  ▶ New Video
+                </button>
+                <button
+                  onClick={() => addNewItem('photo')}
+                  className="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded transition"
+                >
+                  📸 New Photo
+                </button>
+              </div>
+              <div className="border-t border-wave-dark pt-3">
+                <label className="block text-wave-gray text-sm mb-2">Or upload photo:</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleUploadPhoto}
+                  disabled={uploadingFile}
+                  className="block w-full text-sm text-wave-gray file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-wave-gold file:text-wave-black hover:file:bg-yellow-500"
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Stats */}
+          <div className="text-sm text-wave-gray pt-2 border-t border-wave-dark">
+            <p>Total items: {items.length} • Videos: {items.filter((i) => i.type === 'video').length} • Photos: {items.filter((i) => i.type === 'photo').length} • Featured: {items.filter((i) => i.featured).length}</p>
           </div>
         </div>
 
-        {/* New Photos Alert */}
-        {showNewPhotos && (
-          <div className="bg-green-900 border border-green-700 rounded-lg p-4 mb-6">
-            <div className="flex justify-between items-start mb-3">
-              <div>
-                <h3 className="text-green-300 font-bold">✓ {newPhotos.length} Photos Ready to Organize</h3>
-                <p className="text-green-200 text-sm mt-1">From /public/portfolio/ - assign categories and edit details</p>
-              </div>
-              <button
-                onClick={() => setShowNewPhotos(false)}
-                className="text-green-300 hover:text-green-400"
-              >
-                ✕
-              </button>
-            </div>
-            <button
-              onClick={handleAddNewPhotos}
-              className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition"
-            >
-              Add {newPhotos.length} Photos to Editor
-            </button>
-          </div>
-        )}
-
         {/* Filter */}
-        {photos.length > 0 && (
-          <div className="bg-gray-800 rounded-lg p-4 mb-6 border border-gray-700 flex items-center gap-4">
-            <label className="text-gray-300 font-medium">Filter:</label>
+        {items.length > 0 && (
+          <div className="mb-6 flex gap-4">
             <select
-              value={filterCategory}
-              onChange={(e) => setFilterCategory(e.target.value as PhotoCategory | 'all')}
-              className="bg-gray-700 text-white rounded px-3 py-2 border border-gray-600 focus:border-wave-gold"
+              value={filterType}
+              onChange={(e) => setFilterType(e.target.value as any)}
+              className="bg-wave-charcoal text-white rounded px-4 py-2 border border-wave-dark focus:border-wave-gold outline-none"
             >
-              <option value="all">All Categories</option>
-              {photographyCategories.map((cat) => (
-                <option key={cat} value={cat}>
-                  {categoryLabels[cat]}
-                </option>
-              ))}
+              <option value="all">All Items</option>
+              <option value="video">Videos Only</option>
+              <option value="photo">Photos Only</option>
             </select>
-            <span className="text-gray-400 ml-auto">{filteredPhotos.length} photos</span>
+            <span className="text-wave-gray py-2">{filteredItems.length} items</span>
           </div>
         )}
 
-        {/* Photos Grid */}
-        {filteredPhotos.length === 0 ? (
-          <div className="bg-gray-800 rounded-lg p-12 text-center border border-gray-700">
-            <p className="text-gray-400 text-lg">
-              {photos.length === 0 
-                ? '👉 Click "🔍 Scan for Photos" to load photos from /public/portfolio/'
-                : 'No photos in selected category'}
+        {/* Items Grid */}
+        {filteredItems.length === 0 ? (
+          <div className="bg-wave-charcoal rounded-lg p-12 text-center border border-wave-dark">
+            <p className="text-wave-gray text-lg">
+              {items.length === 0 ? '👉 Click "+ Add Item" to get started' : 'No items in selected filter'}
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-6">
-            {filteredPhotos.map((photo) => (
-              <div key={photo.slug} className="bg-gray-800 rounded-lg p-6 border border-gray-700 hover:border-wave-gold transition">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                  {/* Thumbnail */}
-                  <div className="md:col-span-1">
-                    <div className="relative aspect-square bg-gray-700 rounded-lg overflow-hidden">
-                      <Image
-                        src={photo.image}
-                        alt={photo.title}
-                        fill
-                        className="object-cover"
-                        unoptimized
-                      />
-                    </div>
-                    <p className="text-xs text-gray-400 mt-2 truncate">{photo.image.split('/').pop()}</p>
-                  </div>
+          <div className="space-y-6">
+            {filteredItems.map((item) => {
+              const actualIndex = items.indexOf(item);
 
-                  {/* Details */}
-                  <div className="md:col-span-3 space-y-4">
-                    <div>
-                      <label className="block text-sm text-gray-400 mb-1">Title</label>
-                      <input
-                        type="text"
-                        value={photo.title}
-                        onChange={(e) => updateTitle(photo.slug, e.target.value)}
-                        className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:border-wave-gold focus:outline-none text-sm"
-                        placeholder="Photo title"
-                      />
+              return (
+                <div
+                  key={actualIndex}
+                  className="bg-wave-charcoal rounded-lg p-6 border border-wave-dark hover:border-wave-gold transition"
+                >
+                  <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                    {/* Thumbnail */}
+                    <div className="lg:col-span-1">
+                      {item.type === 'photo' && item.image ? (
+                        <div className="relative aspect-square bg-wave-dark rounded-lg overflow-hidden">
+                          <Image
+                            src={item.image}
+                            alt={item.title}
+                            fill
+                            className="object-cover"
+                            unoptimized
+                          />
+                        </div>
+                      ) : (
+                        <div className="aspect-square bg-wave-dark rounded-lg flex items-center justify-center text-wave-gold text-4xl">
+                          {item.type === 'video' ? '▶' : '📸'}
+                        </div>
+                      )}
                     </div>
 
-                    <div>
-                      <label className="block text-sm text-gray-400 mb-1">Description</label>
-                      <textarea
-                        value={photo.description}
-                        onChange={(e) => updateDescription(photo.slug, e.target.value)}
-                        className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:border-wave-gold focus:outline-none text-sm"
-                        rows={2}
-                        placeholder="Describe this photo"
-                      />
-                    </div>
+                    {/* Details */}
+                    <div className="lg:col-span-3 space-y-4">
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-xs text-wave-gold font-semibold mb-1">TYPE</label>
+                          <select
+                            value={item.type}
+                            onChange={(e) => updateItem(actualIndex, 'type', e.target.value as PortfolioType)}
+                            className="w-full px-3 py-2 bg-wave-dark text-white rounded border border-wave-dark focus:border-wave-gold outline-none text-sm"
+                          >
+                            <option value="video">Video</option>
+                            <option value="photo">Photo</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label className="block text-xs text-wave-gold font-semibold mb-1">SLUG</label>
+                          <input
+                            type="text"
+                            value={item.slug}
+                            onChange={(e) => updateItem(actualIndex, 'slug', e.target.value)}
+                            className="w-full px-3 py-2 bg-wave-dark text-white rounded border border-wave-dark focus:border-wave-gold outline-none text-sm"
+                            placeholder="unique-slug"
+                          />
+                        </div>
+                      </div>
 
-                    <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-sm text-gray-400 mb-1">Date</label>
+                        <label className="block text-xs text-wave-gold font-semibold mb-1">TITLE</label>
                         <input
-                          type="date"
-                          value={photo.date}
-                          onChange={(e) => updateDate(photo.slug, e.target.value)}
-                          className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:border-wave-gold focus:outline-none text-sm"
+                          type="text"
+                          value={item.title}
+                          onChange={(e) => updateItem(actualIndex, 'title', e.target.value)}
+                          className="w-full px-3 py-2 bg-wave-dark text-white rounded border border-wave-dark focus:border-wave-gold outline-none text-sm"
+                          placeholder="Project title"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-sm text-gray-400 mb-1">Category</label>
-                        <select
-                          value={photo.category}
-                          onChange={(e) => updateCategory(photo.slug, e.target.value as PhotoCategory)}
-                          className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:border-wave-gold focus:outline-none text-sm"
-                        >
-                          {photographyCategories.map((cat) => (
-                            <option key={cat} value={cat}>
-                              {categoryLabels[cat]}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-4">
-                      <label className="flex items-center text-gray-300 cursor-pointer">
-                        <input
-                          type="checkbox"
-                          checked={selectedFeatured.includes(photo.slug)}
-                          onChange={() => toggleFeatured(photo.slug)}
-                          className="w-4 h-4 rounded"
+                        <label className="block text-xs text-wave-gold font-semibold mb-1">DESCRIPTION</label>
+                        <textarea
+                          value={item.description}
+                          onChange={(e) => updateItem(actualIndex, 'description', e.target.value)}
+                          className="w-full px-3 py-2 bg-wave-dark text-white rounded border border-wave-dark focus:border-wave-gold outline-none text-sm"
+                          rows={2}
+                          placeholder="Describe the project"
                         />
-                        <span className="ml-2 text-sm">⭐ Featured on homepage</span>
-                      </label>
+                      </div>
 
-                      <button
-                        onClick={() => deletePhoto(photo.slug)}
-                        className="ml-auto bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-3 rounded text-sm transition"
-                      >
-                        🗑️ Delete
-                      </button>
+                      <div className="grid grid-cols-3 gap-4">
+                        <div>
+                          <label className="block text-xs text-wave-gold font-semibold mb-1">YEAR</label>
+                          <input
+                            type="number"
+                            value={item.year}
+                            onChange={(e) => updateItem(actualIndex, 'year', parseInt(e.target.value))}
+                            className="w-full px-3 py-2 bg-wave-dark text-white rounded border border-wave-dark focus:border-wave-gold outline-none text-sm"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs text-wave-gold font-semibold mb-1">CATEGORY</label>
+                          <select
+                            value={item.category}
+                            onChange={(e) => updateItem(actualIndex, 'category', e.target.value)}
+                            className="w-full px-3 py-2 bg-wave-dark text-white rounded border border-wave-dark focus:border-wave-gold outline-none text-sm"
+                          >
+                            {(item.type === 'video' ? cinematographyCategories : photographyCategories).map(
+                              (cat) => (
+                                <option key={cat} value={cat}>
+                                  {cat}
+                                </option>
+                              )
+                            )}
+                          </select>
+                        </div>
+                        <div>
+                          <label className="block text-xs text-wave-gold font-semibold mb-1">CLIENT</label>
+                          <input
+                            type="text"
+                            value={item.client || ''}
+                            onChange={(e) => updateItem(actualIndex, 'client', e.target.value || undefined)}
+                            className="w-full px-3 py-2 bg-wave-dark text-white rounded border border-wave-dark focus:border-wave-gold outline-none text-sm"
+                            placeholder="Optional"
+                          />
+                        </div>
+                      </div>
+
+                      {item.type === 'video' ? (
+                        <div>
+                          <label className="block text-xs text-wave-gold font-semibold mb-1">VIDEO URL</label>
+                          <input
+                            type="text"
+                            value={item.videoUrl || ''}
+                            onChange={(e) => updateItem(actualIndex, 'videoUrl', e.target.value)}
+                            className="w-full px-3 py-2 bg-wave-dark text-white rounded border border-wave-dark focus:border-wave-gold outline-none text-sm"
+                            placeholder="https://youtube.com/watch?v=... or https://vimeo.com/..."
+                          />
+                        </div>
+                      ) : (
+                        <div>
+                          <label className="block text-xs text-wave-gold font-semibold mb-1">IMAGE PATH</label>
+                          <input
+                            type="text"
+                            value={item.image || ''}
+                            onChange={(e) => updateItem(actualIndex, 'image', e.target.value)}
+                            className="w-full px-3 py-2 bg-wave-dark text-white rounded border border-wave-dark focus:border-wave-gold outline-none text-sm"
+                            placeholder="/portfolio/image.jpg"
+                          />
+                        </div>
+                      )}
+
+                      <div className="flex items-center gap-4 pt-2 border-t border-wave-dark">
+                        <label className="flex items-center gap-2 text-wave-gray cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={item.featured || false}
+                            onChange={(e) => updateItem(actualIndex, 'featured', e.target.checked)}
+                            className="w-4 h-4"
+                          />
+                          <span className="text-sm">Featured</span>
+                        </label>
+
+                        <div className="ml-auto space-x-2">
+                          <button
+                            onClick={() => duplicateItem(actualIndex)}
+                            className="text-sm bg-blue-600 hover:bg-blue-700 text-white py-1 px-3 rounded transition"
+                          >
+                            Duplicate
+                          </button>
+                          <button
+                            onClick={() => deleteItem(actualIndex)}
+                            className="text-sm bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded transition"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
+          </div>
+        )}
+
+        {/* Final Save Button */}
+        {items.length > 0 && (
+          <div className="mt-8 sticky bottom-6 flex justify-center">
+            <button
+              onClick={savePortfolio}
+              disabled={saving}
+              className="bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white font-bold py-3 px-8 rounded-lg transition text-lg shadow-lg"
+            >
+              {saving ? '💾 Saving...' : '💾 Save All Changes to portfolio.ts'}
+            </button>
           </div>
         )}
       </div>

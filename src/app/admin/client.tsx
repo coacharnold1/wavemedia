@@ -127,36 +127,61 @@ export default function AdminClient() {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    if (!file.type.startsWith('image/')) {
+      showMessage('error', '❌ File must be an image');
+      return;
+    }
+
     setUploadingFile(true);
     try {
-      const formData = new FormData();
-      formData.append('file', file);
+      // Generate filename
+      const filename = `${Date.now()}-${file.name.replace(/[^a-z0-9.-]/gi, '_')}`;
 
-      const response = await fetch('/api/admin/portfolio/upload', {
+      // Get upload credentials from server
+      const credResponse = await fetch('/api/admin/portfolio/upload-url', {
         method: 'POST',
-        body: formData,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ filename }),
       });
 
-      const data = await response.json();
-
-      if (data.success) {
-        // Add new photo item
-        const newItem: PortfolioItem = {
-          slug: file.name.replace(/\.[^/.]+$/, '').toLowerCase().replace(/[^a-z0-9]+/g, '-'),
-          title: 'Untitled Photo',
-          type: 'photo',
-          category: 'Events',
-          year: new Date().getFullYear(),
-          description: '',
-          image: data.path,
-        };
-        setItems([...items, newItem]);
-        showMessage('success', '✅ Photo uploaded and added to editor');
-        setShowNewForm(false);
-      } else {
-        showMessage('error', `❌ ${data.error}`);
+      const credData = await credResponse.json();
+      if (!credData.success) {
+        showMessage('error', `❌ ${credData.error}`);
+        return;
       }
+
+      // Upload directly to Supabase Storage from browser
+      const { createClient } = await import('@supabase/supabase-js');
+      const supabase = createClient(credData.supabaseUrl, credData.anonKey);
+
+      const { error: uploadError } = await supabase.storage
+        .from('portfolio')
+        .upload(filename, file, {
+          contentType: file.type,
+          upsert: false,
+        });
+
+      if (uploadError) {
+        console.error('Upload error:', uploadError);
+        showMessage('error', `❌ Upload failed: ${uploadError.message}`);
+        return;
+      }
+
+      // Add new photo item
+      const newItem: PortfolioItem = {
+        slug: file.name.replace(/\.[^/.]+$/, '').toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+        title: 'Untitled Photo',
+        type: 'photo',
+        category: 'Events',
+        year: new Date().getFullYear(),
+        description: '',
+        image: credData.path,
+      };
+      setItems([...items, newItem]);
+      showMessage('success', '✅ Photo uploaded and added to editor');
+      setShowNewForm(false);
     } catch (error) {
+      console.error('Error:', error);
       showMessage('error', '❌ Error uploading photo');
     } finally {
       setUploadingFile(false);

@@ -57,7 +57,7 @@ export const portfolioItems: PortfolioItem[] = [
     description: "A wedding film that lets the couple revisit their celebration and see it from a new perspective—a keepsake they can return to on anniversaries and share with loved ones.",
     videoUrl: "https://youtu.be/p2XIfYMdocI",
     image: "https://img.youtube.com/vi/p2XIfYMdocI/maxresdefault.jpg",
-    featured: false,
+    featured: true,
   },
   {
     slug: "squad-breast-cancer-event",
@@ -159,18 +159,6 @@ export const portfolioItems: PortfolioItem[] = [
     description: "Behind-the-scenes footage from Director Hall productions.",
     videoUrl: "https://www.youtube.com/watch?v=dGDDQOC03fw",
     image: "https://img.youtube.com/vi/dGDDQOC03fw/maxresdefault.jpg",
-  },
-  {
-    slug: "hillside-media-day",
-    title: "Hillside High School Media Day Highlights",
-    type: "video",
-    category: "Sports",
-    year: 2026,
-    client: "Hillside High School",
-    description: "Hillside HS Football Media Day",
-    videoUrl: "https://vimeo.com/1247072058",
-    image: "https://i.vimeocdn.com/video/1247072058.jpg",
-    featured: true,
   },
   {
     slug: "rich-humidor-video",

@@ -133,6 +133,7 @@ export default function AdminClient() {
       // Use Vercel Blob client SDK for direct upload (bypasses 4.5MB serverless limit)
       const blob = await upload(`portfolio/${Date.now()}-${file.name}`, file, {
         access: 'public',
+        handleUploadUrl: '/api/admin/portfolio/upload/handle',
       });
 
       // Add new photo item

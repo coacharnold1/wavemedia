@@ -32,8 +32,7 @@ export async function POST(request: NextRequest) {
         !item.title ||
         !item.type ||
         !item.category ||
-        !item.year ||
-        !item.description
+        item.year === undefined || item.year === null
       ) {
         return NextResponse.json(
           { error: `Item "${item.title}" is missing required fields` },

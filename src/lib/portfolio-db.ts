@@ -21,7 +21,18 @@ export async function getPortfolioFromDatabase(): Promise<PortfolioItem[]> {
       ORDER BY year DESC, featured DESC
     `;
 
-    return items as PortfolioItem[];
+    return items.map((row: any) => ({
+      slug: row.slug,
+      title: row.title,
+      type: row.type,
+      category: row.category,
+      year: row.year,
+      client: row.client,
+      description: row.description,
+      videoUrl: row.videoUrl,
+      image: row.image,
+      featured: row.featured,
+    })) as PortfolioItem[];
   } catch (error) {
     console.warn('Failed to fetch portfolio from database, using static fallback:', error);
     return staticPortfolioItems;

@@ -4,7 +4,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import VideoPlayer from "@/components/VideoPlayer";
 import PlaceholderArt from "@/components/PlaceholderArt";
-import { portfolioItems } from "@/lib/portfolio";
 import { getPortfolioFromDatabase, getItemFromDatabase } from "@/lib/portfolio-db";
 
 type Props = { params: Promise<{ slug: string }> };

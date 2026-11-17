@@ -134,33 +134,50 @@ export default function AdminClient() {
 
     setUploadingFile(true);
     try {
-      const formData = new FormData();
-      formData.append('file', file);
+      // Generate filename
+      const filename = `${Date.now()}-${file.name.replace(/[^a-z0-9.-]/gi, '_')}`;
 
-      const response = await fetch('/api/admin/portfolio/upload', {
+      // Get signed upload URL from server
+      const signedResponse = await fetch('/api/admin/portfolio/signed-url', {
         method: 'POST',
-        body: formData,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ filename }),
       });
 
-      const data = await response.json();
-
-      if (data.success) {
-        // Add new photo item
-        const newItem: PortfolioItem = {
-          slug: file.name.replace(/\.[^/.]+$/, '').toLowerCase().replace(/[^a-z0-9]+/g, '-'),
-          title: 'Untitled Photo',
-          type: 'photo',
-          category: 'Events',
-          year: new Date().getFullYear(),
-          description: '',
-          image: data.path,
-        };
-        setItems([...items, newItem]);
-        showMessage('success', '✅ Photo uploaded and added to editor');
-        setShowNewForm(false);
-      } else {
-        showMessage('error', `❌ ${data.error}`);
+      const signedData = await signedResponse.json();
+      if (!signedData.success || !signedData.signedUrl) {
+        showMessage('error', `❌ ${signedData.error || 'Failed to get upload URL'}`);
+        return;
       }
+
+      // Upload directly to Supabase Storage using signed URL
+      const uploadResponse = await fetch(signedData.signedUrl, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': file.type,
+        },
+        body: file,
+      });
+
+      if (!uploadResponse.ok) {
+        console.error('Upload failed:', uploadResponse.status, uploadResponse.statusText);
+        showMessage('error', `❌ Upload failed: ${uploadResponse.statusText}`);
+        return;
+      }
+
+      // Add new photo item
+      const newItem: PortfolioItem = {
+        slug: file.name.replace(/\.[^/.]+$/, '').toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+        title: 'Untitled Photo',
+        type: 'photo',
+        category: 'Events',
+        year: new Date().getFullYear(),
+        description: '',
+        image: signedData.publicUrl,
+      };
+      setItems([...items, newItem]);
+      showMessage('success', '✅ Photo uploaded and added to editor');
+      setShowNewForm(false);
     } catch (error) {
       console.error('Error:', error);
       showMessage('error', '❌ Error uploading photo');

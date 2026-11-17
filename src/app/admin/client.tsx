@@ -221,11 +221,41 @@ export default function AdminClient() {
     setShowNewForm(false);
   };
 
+  // Helper function to extract video ID and generate thumbnail URL
+  const getYoutubeThumbnailUrl = (url: string): string | undefined => {
+    if (!url) return undefined;
+    
+    // Extract YouTube video ID from various URL formats
+    let videoId: string | undefined;
+    
+    if (url.includes('youtube.com')) {
+      const match = url.match(/[?&]v=([^&]+)/);
+      videoId = match ? match[1] : undefined;
+    } else if (url.includes('youtu.be')) {
+      const match = url.match(/youtu\.be\/([^?&]+)/);
+      videoId = match ? match[1] : undefined;
+    }
+    
+    return videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : undefined;
+  };
+
   const updateItem = (index: number, field: keyof PortfolioItem, value: any) => {
     setItems((prev) =>
-      prev.map((item, i) =>
-        i === index ? { ...item, [field]: value } : item
-      )
+      prev.map((item, i) => {
+        if (i !== index) return item;
+        
+        const updated: PortfolioItem = { ...item, [field]: value };
+        
+        // If updating videoUrl, auto-generate thumbnail
+        if (field === 'videoUrl' && value) {
+          const thumbnailUrl = getYoutubeThumbnailUrl(value);
+          if (thumbnailUrl) {
+            updated.image = thumbnailUrl;
+          }
+        }
+        
+        return updated;
+      })
     );
   };
 

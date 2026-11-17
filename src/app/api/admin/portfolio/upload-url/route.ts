@@ -12,34 +12,20 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const DATABASE_URL = process.env.DATABASE_URL;
-    if (!DATABASE_URL) {
-      return NextResponse.json(
-        { error: 'Database not configured' },
-        { status: 500 }
-      );
-    }
-
-    // Extract Supabase project URL from DATABASE_URL
-    const dbUrl = new URL(`postgresql://${DATABASE_URL.split('://')[1]}`);
-    const host = dbUrl.hostname || '';
-    const hostParts = host.split('.');
-    const projectId = hostParts[0]?.split('-').pop();
-    
-    if (!projectId) {
-      return NextResponse.json(
-        { error: 'Could not extract Supabase project ID' },
-        { status: 500 }
-      );
-    }
-    
-    const supabaseUrl = `https://${projectId}.supabase.co`;
+    const supabaseUrl = process.env.SUPABASE_URL;
     const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
 
     console.log('Upload URL endpoint:');
     console.log('- supabaseUrl:', supabaseUrl);
     console.log('- supabaseAnonKey exists:', !!supabaseAnonKey);
-    console.log('- supabaseAnonKey length:', supabaseAnonKey?.length || 0);
+
+    if (!supabaseUrl) {
+      console.error('ERROR: SUPABASE_URL is not set!');
+      return NextResponse.json(
+        { error: 'Supabase not fully configured (missing SUPABASE_URL)' },
+        { status: 500 }
+      );
+    }
 
     if (!supabaseAnonKey) {
       console.error('ERROR: SUPABASE_ANON_KEY is not set!');

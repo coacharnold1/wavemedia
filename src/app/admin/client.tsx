@@ -85,12 +85,13 @@ export default function AdminClient() {
     }
   }, []);
 
-  // Load portfolio on auth
+  // Load portfolio on auth (only once when authenticated)
   useEffect(() => {
-    if (isAuthenticated && items.length === 0) {
+    if (isAuthenticated) {
       loadPortfolio();
     }
-  }, [isAuthenticated, loadPortfolio]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAuthenticated]);
 
   const savePortfolio = async () => {
     setSaving(true);

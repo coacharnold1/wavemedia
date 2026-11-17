@@ -19,7 +19,7 @@ export async function POST() {
     console.log('[update-vimeo-thumbnails] Querying Vimeo videos...');
     const videos = await (db as Sql)`
       SELECT id, slug, title, video_url, image
-      FROM portfolio
+      FROM portfolios
       WHERE type = 'video'
         AND video_url IS NOT NULL
         AND video_url LIKE '%vimeo.com%'
@@ -56,7 +56,7 @@ export async function POST() {
         const thumbnailUrl = `https://i.vimeocdn.com/video/${videoId}.jpg`;
 
         await (db as Sql)`
-          UPDATE portfolio
+          UPDATE portfolios
           SET image = ${thumbnailUrl}
           WHERE id = ${video.id}
         `;

@@ -5,7 +5,10 @@ type Sql = ReturnType<typeof postgres>;
 
 export async function POST() {
   try {
+    console.log('[update-vimeo-thumbnails] Starting...');
+    
     if (!db) {
+      console.log('[update-vimeo-thumbnails] Database not available');
       return Response.json(
         { success: false, error: 'Database not available' },
         { status: 500 }
@@ -13,6 +16,7 @@ export async function POST() {
     }
 
     // Find all Vimeo videos without images
+    console.log('[update-vimeo-thumbnails] Querying Vimeo videos...');
     const videos = await (db as Sql)`
       SELECT id, slug, title, video_url, image
       FROM portfolio
@@ -21,6 +25,8 @@ export async function POST() {
         AND video_url LIKE '%vimeo.com%'
         AND (image IS NULL OR image = '')
     `;
+    
+    console.log('[update-vimeo-thumbnails] Found videos:', videos?.length);
 
     if (!videos || videos.length === 0) {
       return Response.json({
@@ -72,9 +78,9 @@ export async function POST() {
       videos: updatedVideos,
     });
   } catch (error) {
-    console.error('Error updating Vimeo thumbnails:', error);
+    console.error('[update-vimeo-thumbnails] Error:', error);
     return Response.json(
-      { success: false, error: 'Failed to update thumbnails' },
+      { success: false, error: 'Failed to update thumbnails', details: String(error) },
       { status: 500 }
     );
   }

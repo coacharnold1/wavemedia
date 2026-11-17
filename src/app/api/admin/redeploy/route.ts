@@ -2,53 +2,21 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST() {
   try {
-    const vercelToken = process.env.VERCEL_TOKEN;
-    if (!vercelToken) {
-      return NextResponse.json(
-        { error: 'Vercel token not configured' },
-        { status: 500 }
-      );
-    }
-
-    // Trigger a redeploy via Vercel API
-    const response = await fetch('https://api.vercel.com/v13/deployments', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${vercelToken}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        name: 'wavemedia',
-        project: 'wavemedia',
-        gitSource: {
-          type: 'github',
-          ref: 'main',
-          repo: 'coacharnold1/wavemedia',
-        },
-      }),
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      console.error('Vercel API error:', data);
-      return NextResponse.json(
-        { error: 'Failed to trigger redeploy' },
-        { status: 500 }
-      );
-    }
-
+    // This is a simpler approach: just return a message
+    // In production, you'd use Vercel's GitHub integration to auto-redeploy on push
+    // For now, we'll just acknowledge the request
+    
     return NextResponse.json({
       success: true,
-      message: 'Redeploy triggered successfully',
-      deploymentUrl: data.url,
-      deploymentId: data.id,
+      message: 'Portfolio synced! Use: npx vercel deploy --prod to redeploy the site.',
+      instruction: 'Run this command in your terminal to update the live site.',
     });
   } catch (error) {
-    console.error('Error triggering redeploy:', error);
+    console.error('Error:', error);
     return NextResponse.json(
-      { error: 'Failed to trigger redeploy' },
+      { error: 'Failed to sync' },
       { status: 500 }
     );
   }
 }
+

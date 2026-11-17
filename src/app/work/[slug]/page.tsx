@@ -20,13 +20,18 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params;
-  const item = await getItemFromDatabase(slug);
-  if (!item) return {};
-  return {
-    title: `${item.title} | WAVE Media`,
-    description: item.description || '',
-  };
+  try {
+    const { slug } = await params;
+    const item = await getItemFromDatabase(slug);
+    if (!item) return {};
+    return {
+      title: `${item.title} | WAVE Media`,
+      description: item.description || '',
+    };
+  } catch (error) {
+    console.warn('Failed to generate metadata:', error);
+    return {};
+  }
 }
 
 export default async function ProjectPage({ params }: Props) {

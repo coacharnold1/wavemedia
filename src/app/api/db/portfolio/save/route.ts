@@ -1,6 +1,5 @@
 import sql from '@/lib/db';
 import { NextRequest, NextResponse } from 'next/server';
-import { revalidateTag } from 'next/cache';
 
 interface PortfolioItem {
   slug: string;
@@ -81,14 +80,21 @@ export async function POST(request: NextRequest) {
       }
     });
 
-    // Revalidate the portfolio cache tag with default config
-    revalidateTag('portfolio', 'default');
-
-    return NextResponse.json({
-      success: true,
-      message: `Successfully saved ${items.length} items to database`,
-      count: items.length,
-    });
+    // Return response with no-cache headers to prevent CDN caching
+    return NextResponse.json(
+      {
+        success: true,
+        message: `Successfully saved ${items.length} items to database`,
+        count: items.length,
+      },
+      {
+        headers: {
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0',
+        },
+      }
+    );
   } catch (error) {
     console.error('Error saving portfolio to database:', error);
     return NextResponse.json(

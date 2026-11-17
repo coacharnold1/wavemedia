@@ -9,6 +9,9 @@ export const metadata: Metadata = {
     "Commercials, documentaries, music videos and branded content from WAVE Media.",
 };
 
+// Don't cache this page - always fetch fresh data from database
+export const revalidate = 0;
+
 export default async function CinematographyPage() {
   const videos = await getItemsByTypeFromDatabase('video');
   return (

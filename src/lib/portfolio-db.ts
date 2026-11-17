@@ -5,7 +5,6 @@
 
 import sql from './db';
 import { portfolioItems as staticPortfolioItems, PortfolioItem } from './portfolio';
-import { unstable_cache } from 'next/cache';
 
 function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
   return Promise.race([
@@ -16,56 +15,47 @@ function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
   ]);
 }
 
-// Cached version of database fetch with revalidation support
-const getPortfolioFromDatabaseCached = unstable_cache(
-  async () => {
-    try {
-      // Skip database during builds
-      const isDuringBuild = process.env.__NEXT_PRIVATE_PREBUILD_TOKENS !== undefined;
-      
-      if (isDuringBuild || !process.env.DATABASE_URL) {
-        return staticPortfolioItems;
-      }
-
-      // We're at runtime with DATABASE_URL set - use database
-      const items = await withTimeout(
-        sql<any[]>`
-          SELECT 
-            slug, title, type, category, year, client, description,
-            video_url as "videoUrl", image, featured
-          FROM portfolios
-          ORDER BY year DESC, featured DESC
-        `,
-        15000
-      );
-
-      if (!Array.isArray(items)) {
-        return staticPortfolioItems;
-      }
-
-      return items.map((row: any) => ({
-        slug: row.slug,
-        title: row.title,
-        type: row.type,
-        category: row.category,
-        year: row.year,
-        client: row.client,
-        description: row.description,
-        videoUrl: row.videoUrl,
-        image: row.image,
-        featured: row.featured,
-      })) as PortfolioItem[];
-    } catch (error) {
-      console.warn('Failed to fetch portfolio from database, using static fallback:', error);
+export async function getPortfolioFromDatabase(): Promise<PortfolioItem[]> {
+  try {
+    // Skip database during builds
+    const isDuringBuild = process.env.__NEXT_PRIVATE_PREBUILD_TOKENS !== undefined;
+    
+    if (isDuringBuild || !process.env.DATABASE_URL) {
       return staticPortfolioItems;
     }
-  },
-  ['portfolio'], // Cache tag for revalidation
-  { revalidate: 60 } // Revalidate every 60 seconds as fallback
-);
 
-export async function getPortfolioFromDatabase(): Promise<PortfolioItem[]> {
-  return getPortfolioFromDatabaseCached();
+    // We're at runtime with DATABASE_URL set - use database
+    const items = await withTimeout(
+      sql<any[]>`
+        SELECT 
+          slug, title, type, category, year, client, description,
+          video_url as "videoUrl", image, featured
+        FROM portfolios
+        ORDER BY year DESC, featured DESC
+      `,
+      15000
+    );
+
+    if (!Array.isArray(items)) {
+      return staticPortfolioItems;
+    }
+
+    return items.map((row: any) => ({
+      slug: row.slug,
+      title: row.title,
+      type: row.type,
+      category: row.category,
+      year: row.year,
+      client: row.client,
+      description: row.description,
+      videoUrl: row.videoUrl,
+      image: row.image,
+      featured: row.featured,
+    })) as PortfolioItem[];
+  } catch (error) {
+    console.warn('Failed to fetch portfolio from database, using static fallback:', error);
+    return staticPortfolioItems;
+  }
 }
 
 export async function getItemsByTypeFromDatabase(type: 'video' | 'photo'): Promise<PortfolioItem[]> {

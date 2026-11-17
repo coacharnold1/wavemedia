@@ -5,6 +5,9 @@ import Link from "next/link";
 import { getFeaturedFromDatabase } from "@/lib/portfolio-db";
 import { getHighlightedTestimonials } from "@/lib/testimonials";
 
+// Don't cache this page - always fetch fresh data from database
+export const revalidate = 0;
+
 export default async function HomePage() {
   const featured = await getFeaturedFromDatabase(3);
   const testimonials = getHighlightedTestimonials(3);

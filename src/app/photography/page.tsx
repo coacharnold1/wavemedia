@@ -9,6 +9,9 @@ export const metadata: Metadata = {
     "Sports, portrait, event, corporate and lifestyle photography from WAVE Media.",
 };
 
+// Don't cache this page - always fetch fresh data from database
+export const revalidate = 0;
+
 export default async function PhotographyPage() {
   const photos = await getItemsByTypeFromDatabase('photo');
   return (

@@ -104,11 +104,11 @@ ${items
   .map(
     (item) => `  {
     slug: "${item.slug}",
-    title: "${item.title.replace(/"/g, '\\"')}",
+    title: ${JSON.stringify(item.title)},
     type: "${item.type}",
     category: "${item.category}",
-    year: ${item.year},${item.client ? `\n    client: "${item.client}",` : ''}
-    description: "${item.description.replace(/"/g, '\\"')}",${
+    year: ${item.year},${item.client ? `\n    client: ${JSON.stringify(item.client)},` : ''}
+    description: ${JSON.stringify(item.description)},${
       item.type === 'video' ? `\n    videoUrl: "${item.video_url}",` : ''
     }${item.image ? `\n    image: "${item.image}",` : ''}${
       item.featured ? `\n    featured: true,` : ''

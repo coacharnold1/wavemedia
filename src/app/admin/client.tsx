@@ -145,65 +145,96 @@ export default function AdminClient() {
   };
 
   const handleUploadPhoto = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    if (!file.type.startsWith('image/')) {
-      showMessage('error', '❌ File must be an image');
-      return;
-    }
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
 
     setUploadingFile(true);
+    const uploadedItems: PortfolioItem[] = [];
+    let successCount = 0;
+    let failureCount = 0;
+
     try {
-      // Generate filename
-      const filename = `${Date.now()}-${file.name.replace(/[^a-z0-9.-]/gi, '_')}`;
+      for (let i = 0; i < files.length; i++) {
+        const file = files.item(i);
+        if (!file) {
+          failureCount++;
+          continue;
+        }
 
-      // Get signed upload URL from server
-      const signedResponse = await fetch('/api/admin/portfolio/signed-url', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ filename }),
-      });
+        if (!file.type.startsWith('image/')) {
+          failureCount++;
+          console.error(`Skipped ${file.name}: not an image`);
+          continue;
+        }
 
-      const signedData = await signedResponse.json();
-      if (!signedData.success || !signedData.signedUrl) {
-        showMessage('error', `❌ ${signedData.error || 'Failed to get upload URL'}`);
-        return;
+        try {
+          // Generate filename with unique prefix
+          const filename = `${Date.now()}-${i}-${file.name.replace(/[^a-z0-9.-]/gi, '_')}`;
+
+          // Get signed upload URL from server
+          const signedResponse = await fetch('/api/admin/portfolio/signed-url', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ filename }),
+          });
+
+          const signedData = await signedResponse.json();
+          if (!signedData.success || !signedData.signedUrl) {
+            failureCount++;
+            console.error(`Failed to get upload URL for ${file.name}`);
+            continue;
+          }
+
+          // Upload directly to Supabase Storage using signed URL
+          const uploadResponse = await fetch(signedData.signedUrl, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': file.type,
+            },
+            body: file,
+          });
+
+          if (!uploadResponse.ok) {
+            failureCount++;
+            console.error(`Upload failed for ${file.name}:`, uploadResponse.status);
+            continue;
+          }
+
+          // Add new photo item
+          const newItem: PortfolioItem = {
+            slug: file.name.replace(/\.[^/.]+$/, '').toLowerCase().replace(/[^a-z0-9]+/g, '-') + `-${Date.now()}`,
+            title: file.name.replace(/\.[^/.]+$/, ''), // Use filename as title
+            type: 'photo',
+            category: 'Events',
+            year: new Date().getFullYear(),
+            description: '',
+            image: signedData.publicUrl,
+          };
+          uploadedItems.push(newItem);
+          successCount++;
+        } catch (error) {
+          failureCount++;
+          console.error(`Error uploading ${file.name}:`, error);
+        }
       }
 
-      // Upload directly to Supabase Storage using signed URL
-      const uploadResponse = await fetch(signedData.signedUrl, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': file.type,
-        },
-        body: file,
-      });
-
-      if (!uploadResponse.ok) {
-        console.error('Upload failed:', uploadResponse.status, uploadResponse.statusText);
-        showMessage('error', `❌ Upload failed: ${uploadResponse.statusText}`);
-        return;
+      if (successCount > 0) {
+        setItems([...items, ...uploadedItems]);
+        const message = failureCount > 0
+          ? `✅ Uploaded ${successCount} photo${successCount !== 1 ? 's' : ''} (${failureCount} failed)`
+          : `✅ Uploaded ${successCount} photo${successCount !== 1 ? 's' : ''}`;
+        showMessage('success', message);
+        setShowNewForm(false);
+      } else {
+        showMessage('error', `❌ Failed to upload ${failureCount} file${failureCount !== 1 ? 's' : ''}`);
       }
-
-      // Add new photo item
-      const newItem: PortfolioItem = {
-        slug: file.name.replace(/\.[^/.]+$/, '').toLowerCase().replace(/[^a-z0-9]+/g, '-'),
-        title: 'Untitled Photo',
-        type: 'photo',
-        category: 'Events',
-        year: new Date().getFullYear(),
-        description: '',
-        image: signedData.publicUrl,
-      };
-      setItems([...items, newItem]);
-      showMessage('success', '✅ Photo uploaded and added to editor');
-      setShowNewForm(false);
     } catch (error) {
       console.error('Error:', error);
-      showMessage('error', '❌ Error uploading photo');
+      showMessage('error', '❌ Error during upload');
     } finally {
       setUploadingFile(false);
+      // Reset file input
+      e.target.value = '';
     }
   };
 
@@ -398,16 +429,17 @@ export default function AdminClient() {
               </div>
 
               <div className="border-t border-wave-dark pt-4">
-                <p className="text-wave-gold text-sm font-semibold mb-3">🖼️ Upload Photo File (auto-added to editor):</p>
+                <p className="text-wave-gold text-sm font-semibold mb-3">🖼️ Upload Photo File(s) (auto-added to editor):</p>
                 <input
                   type="file"
                   accept="image/*"
+                  multiple
                   onChange={handleUploadPhoto}
                   disabled={uploadingFile}
-                  title="Select an image file from your computer. It will upload directly and be added to the editor automatically."
+                  title="Select one or more image files. You can select multiple at once. All will upload directly and be added to the editor automatically."
                   className="block w-full text-sm text-wave-gray file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-wave-gold file:text-wave-black hover:file:bg-yellow-500 cursor-help"
                 />
-                <p className="text-xs text-wave-gray mt-2">Accepts JPG, PNG, WebP, GIF. Auto-uploads and adds to editor.</p>
+                <p className="text-xs text-wave-gray mt-2">Accepts JPG, PNG, WebP, GIF. Select 1 or multiple files at once. All auto-upload and add to editor.</p>
               </div>
             </div>
           )}

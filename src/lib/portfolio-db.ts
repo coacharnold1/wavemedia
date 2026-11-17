@@ -17,11 +17,15 @@ function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
 
 export async function getPortfolioFromDatabase(): Promise<PortfolioItem[]> {
   try {
-    // Try fetching from database
-    if (!process.env.DATABASE_URL) {
+    // Skip database during builds - check if we're in a Vercel build
+    // During build, process.env.__NEXT_PRIVATE_PREBUILD_TOKENS exists
+    const isDuringBuild = process.env.__NEXT_PRIVATE_PREBUILD_TOKENS !== undefined;
+    
+    if (isDuringBuild || !process.env.DATABASE_URL) {
       return staticPortfolioItems;
     }
 
+    // We're at runtime with DATABASE_URL set - use database
     const items = await withTimeout(
       sql<any[]>`
         SELECT 
@@ -30,7 +34,7 @@ export async function getPortfolioFromDatabase(): Promise<PortfolioItem[]> {
         FROM portfolios
         ORDER BY year DESC, featured DESC
       `,
-      5000 // 5 second timeout for build-time queries
+      15000 // 15 second timeout for runtime queries
     );
 
     if (!Array.isArray(items)) {

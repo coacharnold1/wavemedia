@@ -361,67 +361,93 @@ export default function AdminClient() {
         )}
 
         {/* Action Bar */}
-        <div className="bg-wave-charcoal rounded-lg p-6 mb-6 border border-wave-dark space-y-4">
-          <div className="flex flex-wrap gap-4">
+        <div className="bg-wave-charcoal rounded-lg p-6 mb-6 border border-wave-dark space-y-6">
+          {/* Step 1: Create Content */}
+          <div>
+            <h3 className="text-sm font-semibold text-wave-gold mb-3 uppercase tracking-wide">Step 1: Create Content</h3>
             <button
               onClick={() => setShowNewForm(!showNewForm)}
-              className="bg-wave-gold hover:bg-yellow-500 text-wave-black font-bold py-2 px-6 rounded-lg transition"
+              title="Open menu to add videos, photos, or upload image files"
+              className="bg-wave-gold hover:bg-yellow-500 text-wave-black font-bold py-2 px-6 rounded-lg transition cursor-help"
             >
               + Add Item
-            </button>
-            <button
-              onClick={savePortfolio}
-              disabled={saving || loading}
-              className="bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white font-bold py-2 px-6 rounded-lg transition"
-            >
-              {saving ? '💾 Saving...' : '💾 Save to portfolio.ts'}
-            </button>
-            <button
-              onClick={triggerRedeploy}
-              disabled={saving || loading}
-              className="bg-wave-gold hover:bg-yellow-500 disabled:opacity-50 text-wave-black font-bold py-2 px-6 rounded-lg transition"
-            >
-              {saving ? '🚀 Redeploying...' : '🚀 Sync & Redeploy'}
-            </button>
-            <button
-              onClick={loadPortfolio}
-              disabled={loading}
-              className="bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-bold py-2 px-6 rounded-lg transition"
-            >
-              {loading ? '🔄 Loading...' : '🔄 Reload'}
             </button>
           </div>
 
           {/* New Item Form */}
           {showNewForm && (
-            <div className="border-t border-wave-dark pt-4 space-y-3">
-              <p className="text-wave-gray text-sm">Add new item:</p>
-              <div className="flex gap-3">
-                <button
-                  onClick={() => addNewItem('video')}
-                  className="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded transition"
-                >
-                  ▶ New Video
-                </button>
-                <button
-                  onClick={() => addNewItem('photo')}
-                  className="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded transition"
-                >
-                  📸 New Photo
-                </button>
+            <div className="border border-wave-dark rounded-lg p-4 bg-wave-dark space-y-4">
+              <div>
+                <p className="text-wave-gold text-sm font-semibold mb-3">📝 Add Empty Item (you fill in details):</p>
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => addNewItem('video')}
+                    title="Create empty video entry. You'll paste YouTube/Vimeo URL and thumbnail will auto-generate."
+                    className="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded transition cursor-help"
+                  >
+                    ▶ New Video
+                  </button>
+                  <button
+                    onClick={() => addNewItem('photo')}
+                    title="Create empty photo entry. Add title, category, and details manually."
+                    className="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded transition cursor-help"
+                  >
+                    📸 New Photo
+                  </button>
+                </div>
               </div>
-              <div className="border-t border-wave-dark pt-3">
-                <label className="block text-wave-gray text-sm mb-2">Or upload photo:</label>
+
+              <div className="border-t border-wave-dark pt-4">
+                <p className="text-wave-gold text-sm font-semibold mb-3">🖼️ Upload Photo File (auto-added to editor):</p>
                 <input
                   type="file"
                   accept="image/*"
                   onChange={handleUploadPhoto}
                   disabled={uploadingFile}
-                  className="block w-full text-sm text-wave-gray file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-wave-gold file:text-wave-black hover:file:bg-yellow-500"
+                  title="Select an image file from your computer. It will upload directly and be added to the editor automatically."
+                  className="block w-full text-sm text-wave-gray file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-wave-gold file:text-wave-black hover:file:bg-yellow-500 cursor-help"
                 />
+                <p className="text-xs text-wave-gray mt-2">Accepts JPG, PNG, WebP, GIF. Auto-uploads and adds to editor.</p>
               </div>
             </div>
           )}
+
+          {/* Step 2: Edit Content */}
+          <div>
+            <h3 className="text-sm font-semibold text-wave-gold mb-3 uppercase tracking-wide">Step 2: Edit &amp; Organize</h3>
+            <p className="text-xs text-wave-gray mb-3">Edit titles, descriptions, categories below. Mark favorites as &quot;Featured&quot;.</p>
+          </div>
+
+          {/* Step 3: Publish Changes */}
+          <div>
+            <h3 className="text-sm font-semibold text-wave-gold mb-3 uppercase tracking-wide">Step 3: Publish Changes</h3>
+            <div className="flex flex-wrap gap-4">
+              <button
+                onClick={savePortfolio}
+                disabled={saving || loading}
+                title="Save all edits to the database. Changes appear on site within 1-2 seconds."
+                className="bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white font-bold py-2 px-6 rounded-lg transition cursor-help"
+              >
+                {saving ? '💾 Saving...' : '💾 Save Changes'}
+              </button>
+              <button
+                onClick={triggerRedeploy}
+                disabled={saving || loading}
+                title="Force Vercel to rebuild the entire site. Usually not needed—use this only if changes don't appear after 30 seconds."
+                className="bg-wave-gold hover:bg-yellow-500 disabled:opacity-50 text-wave-black font-bold py-2 px-6 rounded-lg transition cursor-help"
+              >
+                {saving ? '🚀 Redeploying...' : '🚀 Force Redeploy'}
+              </button>
+              <button
+                onClick={loadPortfolio}
+                disabled={loading}
+                title="Refresh the editor with latest data from the database. Use if you think something is out of sync."
+                className="bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-bold py-2 px-6 rounded-lg transition cursor-help"
+              >
+                {loading ? '🔄 Reloading...' : '🔄 Reload'}
+              </button>
+            </div>
+          </div>
 
           {/* Stats */}
           <div className="text-sm text-wave-gray pt-2 border-t border-wave-dark">
@@ -490,7 +516,8 @@ export default function AdminClient() {
                           <select
                             value={item.type}
                             onChange={(e) => updateItem(actualIndex, 'type', e.target.value as PortfolioType)}
-                            className="w-full px-3 py-2 bg-wave-dark text-white rounded border border-wave-dark focus:border-wave-gold outline-none text-sm"
+                            title="Choose whether this is a video or photo"
+                            className="w-full px-3 py-2 bg-wave-dark text-white rounded border border-wave-dark focus:border-wave-gold outline-none text-sm cursor-help"
                           >
                             <option value="video">Video</option>
                             <option value="photo">Photo</option>
@@ -502,7 +529,8 @@ export default function AdminClient() {
                             type="text"
                             value={item.slug}
                             onChange={(e) => updateItem(actualIndex, 'slug', e.target.value)}
-                            className="w-full px-3 py-2 bg-wave-dark text-white rounded border border-wave-dark focus:border-wave-gold outline-none text-sm"
+                            title="URL-friendly identifier. Use lowercase letters and hyphens only. Example: 'wedding-film' or 'brand-photoshoot'"
+                            className="w-full px-3 py-2 bg-wave-dark text-white rounded border border-wave-dark focus:border-wave-gold outline-none text-sm cursor-help"
                             placeholder="unique-slug"
                           />
                         </div>
@@ -514,7 +542,8 @@ export default function AdminClient() {
                           type="text"
                           value={item.title}
                           onChange={(e) => updateItem(actualIndex, 'title', e.target.value)}
-                          className="w-full px-3 py-2 bg-wave-dark text-white rounded border border-wave-dark focus:border-wave-gold outline-none text-sm"
+                          title="Project name shown to visitors"
+                          className="w-full px-3 py-2 bg-wave-dark text-white rounded border border-wave-dark focus:border-wave-gold outline-none text-sm cursor-help"
                           placeholder="Project title"
                         />
                       </div>
@@ -524,7 +553,8 @@ export default function AdminClient() {
                         <textarea
                           value={item.description}
                           onChange={(e) => updateItem(actualIndex, 'description', e.target.value)}
-                          className="w-full px-3 py-2 bg-wave-dark text-white rounded border border-wave-dark focus:border-wave-gold outline-none text-sm"
+                          title="Story about the project. Shown when visitors click on it."
+                          className="w-full px-3 py-2 bg-wave-dark text-white rounded border border-wave-dark focus:border-wave-gold outline-none text-sm cursor-help"
                           rows={2}
                           placeholder="Describe the project"
                         />
@@ -537,7 +567,8 @@ export default function AdminClient() {
                             type="number"
                             value={item.year}
                             onChange={(e) => updateItem(actualIndex, 'year', parseInt(e.target.value))}
-                            className="w-full px-3 py-2 bg-wave-dark text-white rounded border border-wave-dark focus:border-wave-gold outline-none text-sm"
+                            title="Year this project was created"
+                            className="w-full px-3 py-2 bg-wave-dark text-white rounded border border-wave-dark focus:border-wave-gold outline-none text-sm cursor-help"
                           />
                         </div>
                         <div>
@@ -545,7 +576,8 @@ export default function AdminClient() {
                           <select
                             value={item.category}
                             onChange={(e) => updateItem(actualIndex, 'category', e.target.value)}
-                            className="w-full px-3 py-2 bg-wave-dark text-white rounded border border-wave-dark focus:border-wave-gold outline-none text-sm"
+                            title="Category for filtering on the site"
+                            className="w-full px-3 py-2 bg-wave-dark text-white rounded border border-wave-dark focus:border-wave-gold outline-none text-sm cursor-help"
                           >
                             {(item.type === 'video' ? cinematographyCategories : photographyCategories).map(
                               (cat) => (
@@ -562,7 +594,8 @@ export default function AdminClient() {
                             type="text"
                             value={item.client || ''}
                             onChange={(e) => updateItem(actualIndex, 'client', e.target.value || undefined)}
-                            className="w-full px-3 py-2 bg-wave-dark text-white rounded border border-wave-dark focus:border-wave-gold outline-none text-sm"
+                            title="Client name (optional). Leave blank if not applicable."
+                            className="w-full px-3 py-2 bg-wave-dark text-white rounded border border-wave-dark focus:border-wave-gold outline-none text-sm cursor-help"
                             placeholder="Optional"
                           />
                         </div>
@@ -575,9 +608,11 @@ export default function AdminClient() {
                             type="text"
                             value={item.videoUrl || ''}
                             onChange={(e) => updateItem(actualIndex, 'videoUrl', e.target.value)}
-                            className="w-full px-3 py-2 bg-wave-dark text-white rounded border border-wave-dark focus:border-wave-gold outline-none text-sm"
+                            title="Paste YouTube or Vimeo URL. Thumbnail generates automatically. Examples: https://youtube.com/watch?v=abc123 or https://youtu.be/abc123"
+                            className="w-full px-3 py-2 bg-wave-dark text-white rounded border border-wave-dark focus:border-wave-gold outline-none text-sm cursor-help"
                             placeholder="https://youtube.com/watch?v=... or https://vimeo.com/..."
                           />
+                          <p className="text-xs text-wave-gray mt-1">💡 Thumbnail auto-generates when you paste a YouTube URL</p>
                         </div>
                       ) : (
                         <div>
@@ -586,19 +621,21 @@ export default function AdminClient() {
                             type="text"
                             value={item.image || ''}
                             onChange={(e) => updateItem(actualIndex, 'image', e.target.value)}
-                            className="w-full px-3 py-2 bg-wave-dark text-white rounded border border-wave-dark focus:border-wave-gold outline-none text-sm"
+                            title="URL to the photo. Use /portfolio/name.jpg if uploaded via file, or full URL if from external source."
+                            className="w-full px-3 py-2 bg-wave-dark text-white rounded border border-wave-dark focus:border-wave-gold outline-none text-sm cursor-help"
                             placeholder="/portfolio/image.jpg"
                           />
                         </div>
                       )}
 
                       <div className="flex items-center gap-4 pt-2 border-t border-wave-dark">
-                        <label className="flex items-center gap-2 text-wave-gray cursor-pointer">
+                        <label className="flex items-center gap-2 text-wave-gray cursor-pointer" title="Check to show on featured work section and homepage">
                           <input
                             type="checkbox"
                             checked={item.featured || false}
                             onChange={(e) => updateItem(actualIndex, 'featured', e.target.checked)}
-                            className="w-4 h-4"
+                            className="w-4 h-4 cursor-help"
+                            title="Check to feature this on the homepage"
                           />
                           <span className="text-sm">Featured</span>
                         </label>
@@ -606,13 +643,15 @@ export default function AdminClient() {
                         <div className="ml-auto space-x-2">
                           <button
                             onClick={() => duplicateItem(actualIndex)}
-                            className="text-sm bg-blue-600 hover:bg-blue-700 text-white py-1 px-3 rounded transition"
+                            title="Create a copy of this item so you can quickly create similar projects"
+                            className="text-sm bg-blue-600 hover:bg-blue-700 text-white py-1 px-3 rounded transition cursor-help"
                           >
                             Duplicate
                           </button>
                           <button
                             onClick={() => deleteItem(actualIndex)}
-                            className="text-sm bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded transition"
+                            title="Remove this item from the editor. Click Save to confirm deletion."
+                            className="text-sm bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded transition cursor-help"
                           >
                             Delete
                           </button>

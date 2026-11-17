@@ -9,8 +9,14 @@ import { getPortfolioFromDatabase, getItemFromDatabase } from "@/lib/portfolio-d
 type Props = { params: Promise<{ slug: string }> };
 
 export async function generateStaticParams() {
-  const items = await getPortfolioFromDatabase();
-  return items.map((item) => ({ slug: item.slug }));
+  try {
+    const items = await getPortfolioFromDatabase();
+    return items.map((item) => ({ slug: item.slug }));
+  } catch (error) {
+    console.warn('Failed to generate static params from database:', error);
+    // Return empty array to disable static generation - pages will be SSG instead
+    return [];
+  }
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

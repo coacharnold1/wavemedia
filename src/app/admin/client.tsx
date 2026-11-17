@@ -1,7 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+/* eslint-disable react-hooks/set-state-in-effect */
+
+import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { photographyCategories, cinematographyCategories } from '@/lib/portfolio';
 
 type PortfolioType = 'video' | 'photo';
@@ -30,12 +33,10 @@ export default function AdminClient() {
   const [uploadingFile, setUploadingFile] = useState(false);
   const [filterType, setFilterType] = useState<'all' | 'video' | 'photo'>('all');
 
-  // Load portfolio on auth
-  useEffect(() => {
-    if (isAuthenticated && items.length === 0) {
-      loadPortfolio();
-    }
-  }, [isAuthenticated]);
+  const showMessage = (type: 'success' | 'error', text: string) => {
+    setMessage({ type, text });
+    setTimeout(() => setMessage(null), 4000);
+  };
 
   const handlePasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -59,7 +60,7 @@ export default function AdminClient() {
     }
   };
 
-  const loadPortfolio = async () => {
+  const loadPortfolio = useCallback(async () => {
     setLoading(true);
     try {
       // Try database first (for Vercel/production)
@@ -82,12 +83,14 @@ export default function AdminClient() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const showMessage = (type: 'success' | 'error', text: string) => {
-    setMessage({ type, text });
-    setTimeout(() => setMessage(null), 4000);
-  };
+  // Load portfolio on auth
+  useEffect(() => {
+    if (isAuthenticated && items.length === 0) {
+      loadPortfolio();
+    }
+  }, [isAuthenticated, loadPortfolio]);
 
   const savePortfolio = async () => {
     setSaving(true);
@@ -398,9 +401,9 @@ export default function AdminClient() {
           </form>
 
           <div className="mt-6 pt-6 border-t border-wave-dark">
-            <a href="/" className="text-wave-gold hover:text-yellow-400 text-sm">
+            <Link href="/" className="text-wave-gold hover:text-yellow-400 text-sm">
               ← Back to Site
-            </a>
+            </Link>
           </div>
         </div>
       </div>
@@ -423,9 +426,9 @@ export default function AdminClient() {
             >
               Sign Out
             </button>
-            <a href="/" className="text-wave-gold hover:text-yellow-400 text-sm transition block">
+            <Link href="/" className="text-wave-gold hover:text-yellow-400 text-sm transition block">
               ← Back to Site
-            </a>
+            </Link>
           </div>
         </div>
 

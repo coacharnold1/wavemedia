@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import PortfolioGallery from "@/components/PortfolioGallery";
-import { getItemsByType, photographyCategories } from "@/lib/portfolio";
+import { photographyCategories } from "@/lib/portfolio";
+import { getItemsByTypeFromDatabase } from "@/lib/portfolio-db";
 
 export const metadata: Metadata = {
   title: "Photography | WAVE Media",
@@ -8,7 +9,8 @@ export const metadata: Metadata = {
     "Sports, portrait, event, corporate and lifestyle photography from WAVE Media.",
 };
 
-export default function PhotographyPage() {
+export default async function PhotographyPage() {
+  const photos = await getItemsByTypeFromDatabase('photo');
   return (
     <main className="min-h-screen bg-wave-black pt-20">
       <section className="py-24">
@@ -20,7 +22,7 @@ export default function PhotographyPage() {
             Still images with a cinematic eye.
           </p>
           <PortfolioGallery
-            items={getItemsByType("photo")}
+            items={photos}
             categories={photographyCategories}
           />
         </div>

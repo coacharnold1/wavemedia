@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import PortfolioGallery from "@/components/PortfolioGallery";
-import { cinematographyCategories, getItemsByType } from "@/lib/portfolio";
+import { cinematographyCategories } from "@/lib/portfolio";
+import { getItemsByTypeFromDatabase } from "@/lib/portfolio-db";
 
 export const metadata: Metadata = {
   title: "Cinematography | WAVE Media",
@@ -8,7 +9,8 @@ export const metadata: Metadata = {
     "Commercials, documentaries, music videos and branded content from WAVE Media.",
 };
 
-export default function CinematographyPage() {
+export default async function CinematographyPage() {
+  const videos = await getItemsByTypeFromDatabase('video');
   return (
     <main className="min-h-screen bg-wave-black pt-20">
       <section className="py-24">
@@ -20,7 +22,7 @@ export default function CinematographyPage() {
             Motion work built around story, light and intent.
           </p>
           <PortfolioGallery
-            items={getItemsByType("video")}
+            items={videos}
             categories={cinematographyCategories}
           />
         </div>

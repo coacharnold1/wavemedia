@@ -2,10 +2,11 @@ import Image from "next/image";
 import PlaceholderArt from "@/components/PlaceholderArt";
 import ServiceIcon from "@/components/ServiceIcon";
 import Link from "next/link";
-import { getFeatured } from "@/lib/portfolio";
+import { getFeaturedFromDatabase } from "@/lib/portfolio-db";
 import { getHighlightedTestimonials } from "@/lib/testimonials";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const featured = await getFeaturedFromDatabase(3);
   const testimonials = getHighlightedTestimonials(3);
   
   return (
@@ -52,7 +53,7 @@ export default function HomePage() {
 
           {/* Portfolio Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {getFeatured().map((item) => (
+            {featured.map((item) => (
               <Link
                 key={item.slug}
                 href={`/work/${item.slug}`}

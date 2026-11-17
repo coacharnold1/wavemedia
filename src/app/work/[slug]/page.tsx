@@ -4,27 +4,29 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import VideoPlayer from "@/components/VideoPlayer";
 import PlaceholderArt from "@/components/PlaceholderArt";
-import { getItem, portfolioItems } from "@/lib/portfolio";
+import { portfolioItems } from "@/lib/portfolio";
+import { getPortfolioFromDatabase, getItemFromDatabase } from "@/lib/portfolio-db";
 
 type Props = { params: Promise<{ slug: string }> };
 
-export function generateStaticParams() {
-  return portfolioItems.map((item) => ({ slug: item.slug }));
+export async function generateStaticParams() {
+  const items = await getPortfolioFromDatabase();
+  return items.map((item) => ({ slug: item.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const item = getItem(slug);
+  const item = await getItemFromDatabase(slug);
   if (!item) return {};
   return {
     title: `${item.title} | WAVE Media`,
-    description: item.description,
+    description: item.description || '',
   };
 }
 
 export default async function ProjectPage({ params }: Props) {
   const { slug } = await params;
-  const item = getItem(slug);
+  const item = await getItemFromDatabase(slug);
   if (!item) notFound();
 
   const isVideo = item.type === "video";

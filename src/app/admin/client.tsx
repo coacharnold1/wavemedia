@@ -123,6 +123,27 @@ export default function AdminClient() {
     }
   };
 
+  const triggerRedeploy = async () => {
+    setSaving(true);
+    try {
+      const response = await fetch('/api/admin/redeploy', {
+        method: 'POST',
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        showMessage('success', '✅ Redeploy triggered! Site will update in ~2 minutes');
+      } else {
+        showMessage('error', `❌ ${data.error}`);
+      }
+    } catch (error) {
+      showMessage('error', '❌ Error triggering redeploy');
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const handleUploadPhoto = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -324,6 +345,13 @@ export default function AdminClient() {
               className="bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white font-bold py-2 px-6 rounded-lg transition"
             >
               {saving ? '💾 Saving...' : '💾 Save to portfolio.ts'}
+            </button>
+            <button
+              onClick={triggerRedeploy}
+              disabled={saving || loading}
+              className="bg-wave-gold hover:bg-yellow-500 disabled:opacity-50 text-wave-black font-bold py-2 px-6 rounded-lg transition"
+            >
+              {saving ? '🚀 Redeploying...' : '🚀 Sync & Redeploy'}
             </button>
             <button
               onClick={loadPortfolio}

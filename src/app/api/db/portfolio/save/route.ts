@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Begin transaction: clear and repopulate
-    await sql.begin(async (tx) => {
+    await sql.begin(async (tx: any) => {
       // Delete all existing records
       await tx`DELETE FROM portfolios`;
 

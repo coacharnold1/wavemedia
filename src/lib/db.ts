@@ -1,14 +1,17 @@
 import postgres from 'postgres';
 
-if (!process.env.DATABASE_URL) {
-  throw new Error('DATABASE_URL environment variable is required');
+let sql: ReturnType<typeof postgres> | null = null;
+
+if (process.env.DATABASE_URL) {
+  sql = postgres(process.env.DATABASE_URL, {
+    ssl: 'require',
+    transform: {
+      undefined: null,
+    },
+  });
 }
 
-const sql = postgres(process.env.DATABASE_URL, {
-  ssl: 'require',
-  transform: {
-    undefined: null,
-  },
-});
-
-export default sql;
+// Export sql if available, otherwise export a stub that throws when called
+export default (sql || (() => {
+  throw new Error('Database connection not available');
+}) as any);

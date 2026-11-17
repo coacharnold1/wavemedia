@@ -24,7 +24,7 @@ export async function GET() {
     `;
 
     // Transform database format to portfolio format
-    const transformed = items.map((item) => ({
+    const transformed = items.map((item: DbPortfolioItem) => ({
       slug: item.slug,
       title: item.title,
       type: item.type,

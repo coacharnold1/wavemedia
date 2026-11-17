@@ -3,19 +3,8 @@ import postgres from 'postgres';
 
 type Sql = ReturnType<typeof postgres>;
 
-export async function POST(request: Request) {
+export async function POST() {
   try {
-    // Get password from request to verify it's authorized
-    const { password } = await request.json();
-
-    // Basic auth check
-    if (password !== process.env.ADMIN_PASSWORD) {
-      return Response.json(
-        { success: false, error: 'Unauthorized' },
-        { status: 401 }
-      );
-    }
-
     if (!db) {
       return Response.json(
         { success: false, error: 'Database not available' },

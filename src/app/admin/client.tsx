@@ -150,7 +150,6 @@ export default function AdminClient() {
       const response = await fetch('/api/admin/update-vimeo-thumbnails', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password: process.env.NEXT_PUBLIC_ADMIN_PASSWORD || '' }),
       });
 
       const data = await response.json();

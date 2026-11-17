@@ -134,52 +134,33 @@ export default function AdminClient() {
 
     setUploadingFile(true);
     try {
-      // Generate filename
-      const filename = `${Date.now()}-${file.name.replace(/[^a-z0-9.-]/gi, '_')}`;
+      const formData = new FormData();
+      formData.append('file', file);
 
-      // Get upload credentials from server
-      const credResponse = await fetch('/api/admin/portfolio/upload-url', {
+      const response = await fetch('/api/admin/portfolio/upload', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ filename }),
+        body: formData,
       });
 
-      const credData = await credResponse.json();
-      if (!credData.success) {
-        showMessage('error', `❌ ${credData.error}`);
-        return;
+      const data = await response.json();
+
+      if (data.success) {
+        // Add new photo item
+        const newItem: PortfolioItem = {
+          slug: file.name.replace(/\.[^/.]+$/, '').toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+          title: 'Untitled Photo',
+          type: 'photo',
+          category: 'Events',
+          year: new Date().getFullYear(),
+          description: '',
+          image: data.path,
+        };
+        setItems([...items, newItem]);
+        showMessage('success', '✅ Photo uploaded and added to editor');
+        setShowNewForm(false);
+      } else {
+        showMessage('error', `❌ ${data.error}`);
       }
-
-      // Upload directly to Supabase Storage from browser
-      const { createClient } = await import('@supabase/supabase-js');
-      const supabase = createClient(credData.supabaseUrl, credData.anonKey);
-
-      const { error: uploadError } = await supabase.storage
-        .from('wavemedianj')
-        .upload(filename, file, {
-          contentType: file.type,
-          upsert: false,
-        });
-
-      if (uploadError) {
-        console.error('Upload error:', uploadError);
-        showMessage('error', `❌ Upload failed: ${uploadError.message}`);
-        return;
-      }
-
-      // Add new photo item
-      const newItem: PortfolioItem = {
-        slug: file.name.replace(/\.[^/.]+$/, '').toLowerCase().replace(/[^a-z0-9]+/g, '-'),
-        title: 'Untitled Photo',
-        type: 'photo',
-        category: 'Events',
-        year: new Date().getFullYear(),
-        description: '',
-        image: credData.path,
-      };
-      setItems([...items, newItem]);
-      showMessage('success', '✅ Photo uploaded and added to editor');
-      setShowNewForm(false);
     } catch (error) {
       console.error('Error:', error);
       showMessage('error', '❌ Error uploading photo');

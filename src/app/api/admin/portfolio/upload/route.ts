@@ -12,7 +12,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Validate file is an image
     if (!file.type.startsWith('image/')) {
       return NextResponse.json(
         { error: 'File must be an image' },
@@ -20,58 +19,27 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check file size (100MB limit for Supabase)
-    if (file.size > 100 * 1024 * 1024) {
-      return NextResponse.json(
-        { error: 'File too large (max 100MB)' },
-        { status: 413 }
-      );
-    }
+    const supabaseUrl = process.env.SUPABASE_URL;
+    const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-    const DATABASE_URL = process.env.DATABASE_URL;
-    if (!DATABASE_URL) {
-      return NextResponse.json(
-        { error: 'Database not configured' },
-        { status: 500 }
-      );
-    }
-
-    // Extract Supabase project URL from DATABASE_URL
-    // DATABASE_URL format: postgres://user:pass@host/db
-    // We need: https://[project-id].supabase.co
-    const dbUrl = new URL(`postgresql://${DATABASE_URL.split('://')[1]}`);
-    const host = dbUrl.hostname || ''; // e.g., "aws-1-us-east-1.pooler.supabase.com"
-    const hostParts = host.split('.');
-    const projectId = hostParts[0]?.split('-').pop(); // Extract project ID from first part
-    
-    if (!projectId) {
-      return NextResponse.json(
-        { error: 'Could not extract Supabase project ID' },
-        { status: 500 }
-      );
-    }
-    
-    const supabaseUrl = `https://${projectId}.supabase.co`;
-    const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
-
-    if (!supabaseAnonKey) {
+    if (!supabaseUrl || !supabaseServiceRoleKey) {
       return NextResponse.json(
         { error: 'Supabase not fully configured' },
         { status: 500 }
       );
     }
 
-    // Create Supabase client for storage
+    // Create Supabase client with SERVICE_ROLE_KEY (bypasses RLS and storage permissions)
     const { createClient } = await import('@supabase/supabase-js');
-    const supabase = createClient(supabaseUrl, supabaseAnonKey);
+    const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
 
     const filename = `${Date.now()}-${file.name.replace(/[^a-z0-9.-]/gi, '_')}`;
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    // Upload to Supabase Storage
+    // Upload to Supabase Storage with service role (no permission checks)
     const { error } = await supabase.storage
-      .from('portfolio')
+      .from('wavemedianj')
       .upload(filename, buffer, {
         contentType: file.type,
         upsert: false,
@@ -85,9 +53,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get public URL
-    const { data: publicData } = supabase.storage
-      .from('portfolio')
+    // Get public URL using ANON_KEY client
+    const anonSupabase = createClient(supabaseUrl, process.env.SUPABASE_ANON_KEY!);
+    const { data: publicData } = anonSupabase.storage
+      .from('wavemedianj')
       .getPublicUrl(filename);
 
     return NextResponse.json({
@@ -103,4 +72,3 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-

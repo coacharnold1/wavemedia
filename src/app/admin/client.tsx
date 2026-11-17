@@ -144,6 +144,35 @@ export default function AdminClient() {
     }
   };
 
+  const updateVimeoThumbnails = async () => {
+    setSaving(true);
+    try {
+      const response = await fetch('/api/admin/update-vimeo-thumbnails', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: process.env.NEXT_PUBLIC_ADMIN_PASSWORD || '' }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        if (data.updated === 0) {
+          showMessage('success', '✅ All Vimeo videos already have thumbnails!');
+        } else {
+          showMessage('success', `✅ Updated ${data.updated} Vimeo video${data.updated !== 1 ? 's' : ''} with thumbnails`);
+          // Reload portfolio to show updated thumbnails
+          setTimeout(() => loadPortfolio(), 1000);
+        }
+      } else {
+        showMessage('error', `❌ ${data.error}`);
+      }
+    } catch (error) {
+      showMessage('error', '❌ Error updating Vimeo thumbnails');
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const handleUploadPhoto = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
@@ -507,6 +536,19 @@ export default function AdminClient() {
           {/* Stats */}
           <div className="text-sm text-wave-gray pt-2 border-t border-wave-dark">
             <p>Total items: {items.length} • Videos: {items.filter((i) => i.type === 'video').length} • Photos: {items.filter((i) => i.type === 'photo').length} • Featured: {items.filter((i) => i.featured).length}</p>
+          </div>
+
+          {/* Maintenance Utilities */}
+          <div className="border-t border-wave-dark pt-4">
+            <h3 className="text-xs font-semibold text-wave-gray mb-2 uppercase tracking-wide">Maintenance</h3>
+            <button
+              onClick={updateVimeoThumbnails}
+              disabled={saving || loading}
+              title="Scan for Vimeo videos without thumbnails and auto-generate them. Use if you added Vimeo videos before thumbnail support was added."
+              className="text-sm bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white py-1 px-3 rounded transition cursor-help"
+            >
+              {saving ? '🎬 Updating...' : '🎬 Fix Vimeo Thumbnails'}
+            </button>
           </div>
         </div>
 

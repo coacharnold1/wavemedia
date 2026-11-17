@@ -1,3 +1,6 @@
+// Portfolio data
+// Last updated: 2026-11-17 12:30 UTC
+// Cache buster: 330c9da
 export type PortfolioType = "video" | "photo";
 
 export interface PortfolioItem {

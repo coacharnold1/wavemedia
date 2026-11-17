@@ -112,6 +112,8 @@ export default function Footer() {
             <Link href="/privacy" className="hover:text-wave-gold">Privacy</Link>
             {' · '}
             <Link href="/terms" className="hover:text-wave-gold">Terms</Link>
+            {' · '}
+            <Link href="/admin" className="text-wave-gray/60 hover:text-wave-gold/60 transition-colors text-xs">admin</Link>
           </p>
         </div>
       </div>

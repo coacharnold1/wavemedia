@@ -252,22 +252,45 @@ export default function AdminClient() {
     setShowNewForm(false);
   };
 
-  // Helper function to extract video ID and generate thumbnail URL
-  const getYoutubeThumbnailUrl = (url: string): string | undefined => {
+  // Helper function to extract video ID and generate thumbnail URL for YouTube/Vimeo
+  const getVideoThumbnailUrl = (url: string): string | undefined => {
     if (!url) return undefined;
     
     // Extract YouTube video ID from various URL formats
-    let videoId: string | undefined;
-    
-    if (url.includes('youtube.com')) {
-      const match = url.match(/[?&]v=([^&]+)/);
-      videoId = match ? match[1] : undefined;
-    } else if (url.includes('youtu.be')) {
-      const match = url.match(/youtu\.be\/([^?&]+)/);
-      videoId = match ? match[1] : undefined;
+    if (url.includes('youtube.com') || url.includes('youtu.be')) {
+      let videoId: string | undefined;
+      
+      if (url.includes('youtube.com')) {
+        const match = url.match(/[?&]v=([^&]+)/);
+        videoId = match ? match[1] : undefined;
+      } else if (url.includes('youtu.be')) {
+        const match = url.match(/youtu\.be\/([^?&]+)/);
+        videoId = match ? match[1] : undefined;
+      }
+      
+      return videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : undefined;
     }
     
-    return videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : undefined;
+    // Extract Vimeo video ID from various URL formats
+    if (url.includes('vimeo.com')) {
+      let videoId: string | undefined;
+      
+      // Handle https://vimeo.com/123456789
+      if (url.includes('vimeo.com/')) {
+        const match = url.match(/vimeo\.com\/(\d+)/);
+        videoId = match ? match[1] : undefined;
+      }
+      // Handle https://player.vimeo.com/video/123456789
+      if (url.includes('player.vimeo.com')) {
+        const match = url.match(/video\/(\d+)/);
+        videoId = match ? match[1] : undefined;
+      }
+      
+      // Vimeo thumbnail URL format
+      return videoId ? `https://i.vimeocdn.com/video/${videoId}.jpg` : undefined;
+    }
+    
+    return undefined;
   };
 
   const updateItem = (index: number, field: keyof PortfolioItem, value: any) => {
@@ -277,9 +300,9 @@ export default function AdminClient() {
         
         const updated: PortfolioItem = { ...item, [field]: value };
         
-        // If updating videoUrl, auto-generate thumbnail
+        // If updating videoUrl, auto-generate thumbnail for YouTube or Vimeo
         if (field === 'videoUrl' && value) {
-          const thumbnailUrl = getYoutubeThumbnailUrl(value);
+          const thumbnailUrl = getVideoThumbnailUrl(value);
           if (thumbnailUrl) {
             updated.image = thumbnailUrl;
           }
@@ -640,11 +663,11 @@ export default function AdminClient() {
                             type="text"
                             value={item.videoUrl || ''}
                             onChange={(e) => updateItem(actualIndex, 'videoUrl', e.target.value)}
-                            title="Paste YouTube or Vimeo URL. Thumbnail generates automatically. Examples: https://youtube.com/watch?v=abc123 or https://youtu.be/abc123"
+                            title="Paste YouTube or Vimeo URL. Thumbnail generates automatically. Examples: https://youtube.com/watch?v=abc123, https://youtu.be/abc123, or https://vimeo.com/123456789"
                             className="w-full px-3 py-2 bg-wave-dark text-white rounded border border-wave-dark focus:border-wave-gold outline-none text-sm cursor-help"
                             placeholder="https://youtube.com/watch?v=... or https://vimeo.com/..."
                           />
-                          <p className="text-xs text-wave-gray mt-1">💡 Thumbnail auto-generates when you paste a YouTube URL</p>
+                          <p className="text-xs text-wave-gray mt-1">💡 Thumbnail auto-generates for YouTube or Vimeo URLs</p>
                         </div>
                       ) : (
                         <div>

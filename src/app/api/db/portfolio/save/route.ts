@@ -1,5 +1,6 @@
 import sql from '@/lib/db';
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 
 interface PortfolioItem {
   slug: string;
@@ -79,6 +80,12 @@ export async function POST(request: NextRequest) {
         `;
       }
     });
+
+    // Revalidate all portfolio-related pages to clear cache
+    revalidatePath('/', 'layout');
+    revalidatePath('/photography');
+    revalidatePath('/cinematography');
+    revalidatePath('/work', 'layout');
 
     return NextResponse.json({
       success: true,

@@ -15,22 +15,9 @@ export async function POST(request: NextRequest) {
     const supabaseUrl = process.env.SUPABASE_URL;
     const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
 
-    console.log('Upload URL endpoint:');
-    console.log('- supabaseUrl:', supabaseUrl);
-    console.log('- supabaseAnonKey exists:', !!supabaseAnonKey);
-
-    if (!supabaseUrl) {
-      console.error('ERROR: SUPABASE_URL is not set!');
+    if (!supabaseUrl || !supabaseAnonKey) {
       return NextResponse.json(
-        { error: 'Supabase not fully configured (missing SUPABASE_URL)' },
-        { status: 500 }
-      );
-    }
-
-    if (!supabaseAnonKey) {
-      console.error('ERROR: SUPABASE_ANON_KEY is not set!');
-      return NextResponse.json(
-        { error: 'Supabase not fully configured (missing SUPABASE_ANON_KEY)' },
+        { error: 'Supabase not fully configured' },
         { status: 500 }
       );
     }
@@ -40,7 +27,7 @@ export async function POST(request: NextRequest) {
     const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
     const { data: publicData } = supabase.storage
-      .from('portfolio')
+      .from('wavemedianj')
       .getPublicUrl(filename);
 
     return NextResponse.json({

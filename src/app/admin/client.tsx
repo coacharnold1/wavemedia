@@ -155,7 +155,7 @@ export default function AdminClient() {
       const supabase = createClient(credData.supabaseUrl, credData.anonKey);
 
       const { error: uploadError } = await supabase.storage
-        .from('portfolio')
+        .from('wavemedianj')
         .upload(filename, file, {
           contentType: file.type,
           upsert: false,
